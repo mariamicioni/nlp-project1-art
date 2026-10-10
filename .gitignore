@@ -1,0 +1,10 @@
+# local Python environment
+.venv/
+
+# dataset (download instructions in README.md)
+data/
+
+# Python / Jupyter / W&B temporary files
+__pycache__/
+.ipynb_checkpoints/
+wandb/
