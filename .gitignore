@@ -8,3 +8,9 @@ data/
 __pycache__/
 .ipynb_checkpoints/
 wandb/
+
+# saved model weights (too large, reproducible by training)
+checkpoints/
+
+# personal VS Code settings
+.vscode/
