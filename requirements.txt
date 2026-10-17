@@ -5,3 +5,4 @@ ipykernel==7.4.0
 gensim==4.4.0
 pandas==3.0.6
 pyarrow==26.0.0
+ipywidgets==8.1.9
