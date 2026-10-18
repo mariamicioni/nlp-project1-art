@@ -12,5 +12,8 @@ wandb/
 # saved model weights (too large, reproducible by training)
 checkpoints/
 
+# computed features (reproducible by running 02_preprocessing.ipynb)
+features/
+
 # personal VS Code settings
 .vscode/
