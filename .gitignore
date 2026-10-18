@@ -1,7 +1,7 @@
 # local Python environment
 .venv/
 
-# dataset (download instructions in README.md)
+# local copy of the dataset (not needed: the notebooks load it from Hugging Face)
 data/
 
 # Python / Jupyter / W&B temporary files
