@@ -91,6 +91,7 @@ Exercise notebooks:
 - NumPy documentation: `numpy.savez`, https://numpy.org/doc/stable/reference/generated/numpy.savez.html, and `numpy.ndarray.astype`, https://numpy.org/doc/stable/reference/generated/numpy.ndarray.astype.html
 - Python documentation: `os` module, https://docs.python.org/3/library/os.html
 - PyTorch tutorial "Neural Networks": https://docs.pytorch.org/tutorials/beginner/blitz/neural_networks_tutorial.html
+- PyTorch documentation: `torch.nn.CrossEntropyLoss`, https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html
 - scikit-learn glossary (naming convention `X` and `y`): https://scikit-learn.org/stable/glossary.html
 
 ## Use of AI
