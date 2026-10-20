@@ -86,6 +86,7 @@ Exercise notebooks:
 - Lhoest, Q., Villanova del Moral, A., Jernite, Y., et al. (2021). Datasets: A Community Library for Natural Language Processing. *Proceedings of EMNLP 2021: System Demonstrations*, 175–184. (Hugging Face Datasets)
 - McKinney, W. (2010). Data Structures for Statistical Computing in Python. *Proceedings of the 9th Python in Science Conference*, 56–61. (pandas)
 - Hunter, J. D. (2007). Matplotlib: A 2D Graphics Environment. *Computing in Science & Engineering, 9*(3), 90–95.
+- Biewald, L. (2020). *Experiment Tracking with Weights and Biases*. Software available from https://wandb.ai/
 
 ### Documentation and tutorials (accessed October 2026)
 
@@ -97,6 +98,9 @@ Exercise notebooks:
 - PyTorch documentation: "Reproducibility" (`torch.manual_seed`), https://docs.pytorch.org/docs/stable/notes/randomness.html
 - PyTorch documentation: `torch.utils.data` (`DataLoader`, `TensorDataset`), https://docs.pytorch.org/docs/stable/data.html
 - scikit-learn glossary (naming convention `X` and `y`): https://scikit-learn.org/stable/glossary.html
+- Weights & Biases quickstart (`wandb.init` with `project` and `config`): https://docs.wandb.ai/models/quickstart
+- Weights & Biases documentation: `wandb.init()` reference (`project`, `name`, `config`), https://docs.wandb.ai/models/ref/python/functions/init
+- Weights & Biases documentation: "Log objects and media" (`run.log`, `epoch` as custom x-axis), https://docs.wandb.ai/models/track/log
 
 ## Use of AI
 
