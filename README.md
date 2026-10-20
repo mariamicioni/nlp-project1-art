@@ -104,6 +104,7 @@ Exercise notebooks:
 - PyTorch tutorial "Save and Load the Model": https://docs.pytorch.org/tutorials/beginner/basics/saveloadrun_tutorial.html
 - Python documentation: built-in function `float` (`float("inf")`), https://docs.python.org/3/library/functions.html#float
 - Weights & Biases documentation: "Log summary metrics" (`run.summary`), https://docs.wandb.ai/models/track/log/log-summary
+- Python documentation: "Sorting Techniques" (`sorted()`), https://docs.python.org/3/howto/sorting.html
 
 ## Use of AI
 
