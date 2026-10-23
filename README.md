@@ -93,6 +93,9 @@ Exercise notebooks:
 
 - NumPy documentation: `numpy.savez`, https://numpy.org/doc/stable/reference/generated/numpy.savez.html, and `numpy.ndarray.astype`, https://numpy.org/doc/stable/reference/generated/numpy.ndarray.astype.html
 - Python documentation: `os` module, https://docs.python.org/3/library/os.html
+- NumPy documentation: `numpy.percentile`, https://numpy.org/doc/stable/reference/generated/numpy.percentile.html
+- Python documentation: "Common Sequence Operations" (slicing, `*` and `+` on lists), https://docs.python.org/3/library/stdtypes.html#common-sequence-operations
+- PyTorch documentation: `torch.nn.LSTM` (`h_n`, the final hidden state), https://docs.pytorch.org/docs/stable/generated/torch.nn.LSTM.html
 - PyTorch tutorial "Neural Networks": https://docs.pytorch.org/tutorials/beginner/blitz/neural_networks_tutorial.html
 - PyTorch tutorial "Optimizing Model Parameters": https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html
 - PyTorch documentation: `torch.nn.CrossEntropyLoss`, https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html
