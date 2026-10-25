@@ -59,6 +59,7 @@ Lecture slides:
 - Marfurt, A. (2026, September 24). *Word Embeddings* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026, September 29). *Recurrent Neural Networks* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026, October 6). *Advanced RNNs* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
+- Marfurt, A. (2026). *Project Discussions* [Lecture slides, weeks 1–6]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 
 Exercise notebooks:
 
@@ -67,6 +68,7 @@ Exercise notebooks:
 - Marfurt, A. (2026). *Topic Modeling* [Exercise solution, `topic_modeling_solution.ipynb`, Week 2]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026). *Word Embeddings* [Exercise solution, `word2vec_solution.ipynb`, Week 2]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026). *Experiment Tracking* [Exercise solution, `experiment_tracking_solution.ipynb`, Project Discussions]. NLP HS26, Lucerne University of Applied Sciences and Arts.
+- Marfurt, A. (2026). *Sequence-to-sequence RNN* [Exercise solution, `seq2seq_rnn_solution.ipynb`, Week 4]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 
 ### Data and papers
 
@@ -100,7 +102,11 @@ Exercise notebooks:
 - NumPy documentation: `numpy.zeros` (`shape`, `dtype`), https://numpy.org/doc/stable/reference/generated/numpy.zeros.html
 - Python tutorial: "Looping Techniques" (`dict.items()`), https://docs.python.org/3/tutorial/datastructures.html#looping-techniques
 - PyTorch documentation: `torch.nn.Embedding` (`from_pretrained`, `freeze`, `padding_idx`), https://docs.pytorch.org/docs/stable/generated/torch.nn.Embedding.html
+- PyTorch documentation: `torch.nn.GRU`, https://docs.pytorch.org/docs/stable/generated/torch.nn.GRU.html
+- Python documentation: built-in function `isinstance`, https://docs.python.org/3/library/functions.html#isinstance
 - PyTorch documentation: `torch.nn.LSTM` (`h_n`, the final hidden state), https://docs.pytorch.org/docs/stable/generated/torch.nn.LSTM.html
+- PyTorch documentation: `torch.nn.utils.rnn.pack_padded_sequence`, https://docs.pytorch.org/docs/stable/generated/torch.nn.utils.rnn.pack_padded_sequence.html
+- NumPy documentation: `numpy.sum` (`axis`), https://numpy.org/doc/stable/reference/generated/numpy.sum.html
 - PyTorch tutorial "Neural Networks": https://docs.pytorch.org/tutorials/beginner/blitz/neural_networks_tutorial.html
 - PyTorch tutorial "Optimizing Model Parameters": https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html
 - PyTorch documentation: `torch.nn.CrossEntropyLoss`, https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html
