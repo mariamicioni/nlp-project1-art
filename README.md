@@ -132,6 +132,10 @@ Exercise notebooks:
 - Weights & Biases documentation: "Log objects and media" (`run.log`, `epoch` as custom x-axis), https://docs.wandb.ai/models/track/log
 - PyTorch tutorial "Save and Load the Model": https://docs.pytorch.org/tutorials/beginner/basics/saveloadrun_tutorial.html
 - Python documentation: built-in function `float` (`float("inf")`), https://docs.python.org/3/library/functions.html#float
+- Python documentation: built-in functions `all()`, `any()` and `ord()`, https://docs.python.org/3/library/functions.html
+- Python documentation: `string.punctuation`, https://docs.python.org/3/library/string.html#string.punctuation
+- Python documentation: `re` (regular expressions, `re.search`), https://docs.python.org/3/library/re.html
+- NLTK documentation: "Installing NLTK Data" (`nltk.download`), https://www.nltk.org/data.html, and `nltk.probability.FreqDist`, https://www.nltk.org/api/nltk.probability.FreqDist.html
 - Weights & Biases documentation: "Log summary metrics" (`run.summary`), https://docs.wandb.ai/models/track/log/log-summary
 - Python documentation: "Sorting Techniques" (`sorted()`), https://docs.python.org/3/howto/sorting.html
 - Karpathy, A. (2019, April 25). *A Recipe for Training Neural Networks* [Blog post] ("overfit one batch"). https://karpathy.github.io/2019/04/25/recipe/
