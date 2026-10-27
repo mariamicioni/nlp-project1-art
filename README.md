@@ -42,14 +42,27 @@ wandb login
 Then open the notebooks with the `.venv` kernel and run them in order:
 
 1. `01_data_exploration.ipynb` – a first look at the data
-2. `02_preprocessing.ipynb` – tokenization, choice of word embeddings and the input features of model 1
-3. `03_model1_embeddings.ipynb` – model 1
-4. `04_model2_rnn.ipynb` – model 2
-5. `05_evaluation.ipynb` – final results on the test set
+2. `02_preprocessing.ipynb` – preprocessing decisions, choice of word embeddings and the input of both models
+3. `03_model1_embeddings.ipynb` – model 1: training, experiments, results
+4. `04_model2_rnn.ipynb` – model 2: training, experiments, results
+5. `05_evaluation.ipynb` – the chosen model of each architecture on the test set
 
 The GloVe embeddings (about 400 MB) are downloaded automatically the first time. The comparison cell in `02_preprocessing.ipynb` also downloads fastText and word2vec (about 2.7 GB); you can skip it, the results are saved in the notebook.
 
 `02_preprocessing.ipynb` saves the input features of model 1 to `features/model1.npz` (about 93 MB), which `03_model1_embeddings.ipynb` loads, and the input of model 2 (padded word numbers and the GloVe embedding matrix) to `features/model2.npz` (about 40 MB), which `04_model2_rnn.ipynb` loads. The files are not in the repository because they can be recreated, so run `02_preprocessing.ipynb` before the training notebooks.
+
+Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the two chosen runs, so run `03` and `04` before it. All runs use seed 42 and give the same results when they are run again. On my laptop CPU (Intel Core i7-1360P, no GPU), `03_model1_embeddings.ipynb` takes about 15 minutes (10 runs) and `04_model2_rnn.ipynb` about 1.5 hours (12 runs).
+
+## Results
+
+All choices were made on the validation set; the test set is used once, in `05_evaluation.ipynb`. For each architecture, the run with the lowest validation loss is chosen, and from that run the epoch with the lowest validation loss.
+
+| Model | Chosen configuration | Best epoch | Validation loss | Validation accuracy |
+|---|---|---|---|---|
+| Model 1: averaged GloVe vectors + 2-layer classifier | hidden size 300, learning rate 0.0001 | 14 | 0.6479 | 62.90% |
+| Model 2: GloVe + 2-layer RNN + 2-layer classifier | GRU, hidden size 128, learning rate 0.001, dropout 0.5 | 4 | 0.5872 | 67.60% |
+
+Experiments: model 1 with 9 runs (hidden size 50/100/300 × learning rate 0.01/0.001/0.0001), model 2 with 12 runs (LSTM/GRU × learning rate 0.01/0.001/0.0001, and dropout 0.2/0.5/0.7 with learning rate 0.001). All results are in the notebooks, sections "Results" and "Conclusion". The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
 
 ## References
 
