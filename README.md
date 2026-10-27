@@ -124,6 +124,9 @@ Exercise notebooks:
 - Python documentation: built-in function `float` (`float("inf")`), https://docs.python.org/3/library/functions.html#float
 - Weights & Biases documentation: "Log summary metrics" (`run.summary`), https://docs.wandb.ai/models/track/log/log-summary
 - Python documentation: "Sorting Techniques" (`sorted()`), https://docs.python.org/3/howto/sorting.html
+- Karpathy, A. (2019, April 25). *A Recipe for Training Neural Networks* [Blog post] ("overfit one batch"). https://karpathy.github.io/2019/04/25/recipe/
+- PyTorch documentation: `torch.equal`, https://docs.pytorch.org/docs/stable/generated/torch.equal.html
+- Python documentation: `time` module (`time.time()`), https://docs.python.org/3/library/time.html
 
 ## Use of AI
 
