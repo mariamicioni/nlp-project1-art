@@ -33,6 +33,12 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+The training notebooks (`03` and `04`) log every run to Weights & Biases (W&B). Log in once in the terminal with the API key of your own (free) W&B account; the key is stored locally, and the notebooks then log in with `wandb.login()` without asking:
+
+```bash
+wandb login
+```
+
 Then open the notebooks with the `.venv` kernel and run them in order:
 
 1. `01_data_exploration.ipynb` – a first look at the data
@@ -80,6 +86,10 @@ Exercise notebooks:
 - Mikolov, T., Sutskever, I., Chen, K., Corrado, G., & Dean, J. (2013). Distributed Representations of Words and Phrases and their Compositionality. *Advances in Neural Information Processing Systems 26 (NeurIPS 2013)*.
 - Bojanowski, P., Grave, E., Joulin, A., & Mikolov, T. (2017). Enriching Word Vectors with Subword Information. *Transactions of the Association for Computational Linguistics, 5*, 135–146.
 - Lu, L., Shin, Y., Su, Y., & Karniadakis, G. E. (2020). Dying ReLU and Initialization: Theory and Numerical Examples. *Communications in Computational Physics*. https://doi.org/10.4208/cicp.OA-2020-0165
+- Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014). Dropout: A Simple Way to Prevent Neural Networks from Overfitting. *Journal of Machine Learning Research, 15*(56), 1929–1958. https://jmlr.org/papers/v15/srivastava14a.html
+- Zaremba, W., Sutskever, I., & Vinyals, O. (2014). Recurrent Neural Network Regularization. *arXiv preprint arXiv:1409.2329*. https://arxiv.org/abs/1409.2329
+- Loshchilov, I., & Hutter, F. (2019). Decoupled Weight Decay Regularization. *International Conference on Learning Representations (ICLR 2019)*. https://arxiv.org/abs/1711.05101
+- Hägele, A., Bakouch, E., Kosson, A., Ben Allal, L., Von Werra, L., & Jaggi, M. (2024). Scaling Laws and Compute-Optimal Training Beyond Fixed Training Durations. *arXiv preprint arXiv:2405.18392*. https://arxiv.org/abs/2405.18392 (cited on slide 33 of the course slides "Project Discussions")
 
 ### Software
 
@@ -126,8 +136,14 @@ Exercise notebooks:
 - Python documentation: "Sorting Techniques" (`sorted()`), https://docs.python.org/3/howto/sorting.html
 - Karpathy, A. (2019, April 25). *A Recipe for Training Neural Networks* [Blog post] ("overfit one batch"). https://karpathy.github.io/2019/04/25/recipe/
 - PyTorch documentation: `torch.equal`, https://docs.pytorch.org/docs/stable/generated/torch.equal.html
+- PyTorch documentation: `torch.nn.Dropout`, https://docs.pytorch.org/docs/stable/generated/torch.nn.Dropout.html
+- PyTorch documentation: `torch.optim.AdamW` (algorithm), https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html
 - Python documentation: `time` module (`time.time()`), https://docs.python.org/3/library/time.html
 
 ## Use of AI
 
-Claude (Anthropic) and ChatGPT (OpenAI) were used for brainstorming and coding assistance.
+I used the following AI tools. All decisions are my own, and I reviewed, ran and understood all code before committing it.
+
+- **Claude (Anthropic):** help with coding and documentation; finding and checking sources for the citations.
+- **ChatGPT (OpenAI):** reviews of the project, general questions, and style checks.
+- **Gemini (Google):** a review of the code and the experiments; its suggestions were checked, and only some of them were adopted.
