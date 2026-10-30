@@ -45,7 +45,7 @@ Then open the notebooks with the `.venv` kernel and run them in order:
 2. `02_preprocessing.ipynb` – preprocessing decisions, choice of word embeddings and the input of both models
 3. `03_model1_embeddings.ipynb` – model 1: training, experiments, results
 4. `04_model2_rnn.ipynb` – model 2: training, experiments, results
-5. `05_evaluation.ipynb` – the chosen model of each architecture on the test set
+5. `05_evaluation.ipynb` – the chosen model of each architecture on the test set, and the hypothesis-only run as a diagnostic
 
 The GloVe embeddings (about 400 MB) are downloaded automatically the first time. The comparison cell in `02_preprocessing.ipynb` also downloads fastText and word2vec (about 2.7 GB); you can skip it, the results are saved in the notebook.
 
@@ -105,6 +105,7 @@ Exercise notebooks:
 - Poliak, A., Naradowsky, J., Haldar, A., Rudinger, R., & Van Durme, B. (2018). Hypothesis Only Baselines in Natural Language Inference. *Proceedings of the Seventh Joint Conference on Lexical and Computational Semantics (\*SEM 2018)*, 180–191. https://arxiv.org/abs/1805.01042
 - Loshchilov, I., & Hutter, F. (2019). Decoupled Weight Decay Regularization. *International Conference on Learning Representations (ICLR 2019)*. https://arxiv.org/abs/1711.05101
 - McNemar, Q. (1947). Note on the sampling error of the difference between correlated proportions or percentages. *Psychometrika, 12*(2), 153–157. https://doi.org/10.1007/BF02295996
+- Breiman, L. (2001). Random Forests. *Machine Learning, 45*(1), 5–32. https://doi.org/10.1023/A:1010933404324
 - Hägele, A., Bakouch, E., Kosson, A., Ben Allal, L., Von Werra, L., & Jaggi, M. (2024). Scaling Laws and Compute-Optimal Training Beyond Fixed Training Durations. *arXiv preprint arXiv:2405.18392*. https://arxiv.org/abs/2405.18392 (cited on slide 33 of the course slides "Project Discussions")
 
 ### Software
@@ -168,6 +169,8 @@ Exercise notebooks:
 - SciPy documentation: `scipy.stats.binomtest`, https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html
 - Wikipedia: "McNemar's test" (exact binomial test), https://en.wikipedia.org/wiki/McNemar%27s_test
 - Wikipedia: "Two-proportion Z-test" (standard error of a difference between two proportions), https://en.wikipedia.org/wiki/Two-proportion_Z-test
+- scikit-learn documentation: "Permutation feature importance", https://scikit-learn.org/stable/modules/permutation_importance.html
+- PyTorch documentation: `torch.randperm`, https://docs.pytorch.org/docs/stable/generated/torch.randperm.html, and `Tensor.clone`, https://docs.pytorch.org/docs/stable/generated/torch.Tensor.clone.html
 
 ## Use of AI
 
