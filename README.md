@@ -51,18 +51,18 @@ The GloVe embeddings (about 400 MB) are downloaded automatically the first time.
 
 `02_preprocessing.ipynb` saves the input features of model 1 to `features/model1.npz` (about 93 MB), which `03_model1_embeddings.ipynb` loads, and the input of model 2 (padded word numbers and the GloVe embedding matrix) to `features/model2.npz` (about 40 MB), which `04_model2_rnn.ipynb` loads. The files are not in the repository because they can be recreated, so run `02_preprocessing.ipynb` before the training notebooks.
 
-Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the two chosen runs, so run `03` and `04` before it. All runs use seed 42 and give the same results when they are run again. On my laptop CPU (Intel Core i7-1360P, no GPU), `03_model1_embeddings.ipynb` takes about 15 minutes (10 runs) and `04_model2_rnn.ipynb` about 1.5 hours (12 runs).
+Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the two chosen runs, so run `03` and `04` before it. All runs use seed 42 and give the same results when they are run again. On my laptop CPU (Intel Core i7-1360P, no GPU), `03_model1_embeddings.ipynb` takes about 15 minutes (11 runs) and `04_model2_rnn.ipynb` about 1.5 hours (12 runs).
 
 ## Results
 
-All choices were made on the validation set; the test set is used once, in `05_evaluation.ipynb`. For each architecture, the run with the lowest validation loss is chosen, and from that run the epoch with the lowest validation loss.
+All choices were made on the validation set; the test set is evaluated once, in `05_evaluation.ipynb`. For each architecture, the run with the lowest validation loss is chosen, and from that run the epoch with the lowest validation loss.
 
 | Model | Chosen configuration | Best epoch | Validation loss | Validation accuracy |
 |---|---|---|---|---|
 | Model 1: averaged GloVe vectors + 2-layer classifier | hidden size 300, learning rate 0.0001 | 14 | 0.6479 | 62.90% |
 | Model 2: GloVe + 2-layer RNN + 2-layer classifier | GRU, hidden size 128, learning rate 0.001, dropout 0.5 | 4 | 0.5872 | 67.60% |
 
-Experiments: model 1 with 9 runs (hidden size 50/100/300 × learning rate 0.01/0.001/0.0001), model 2 with 12 runs (LSTM/GRU × learning rate 0.01/0.001/0.0001, and dropout 0.2/0.5/0.7 with learning rate 0.001). All results are in the notebooks, sections "Results" and "Conclusion". The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
+Experiments: model 1 with 9 runs (hidden size 50/100/300 × learning rate 0.01/0.001/0.0001), model 2 with 12 runs (LSTM/GRU × learning rate 0.01/0.001/0.0001, and dropout 0.2/0.5/0.7 with learning rate 0.001). Notebook `03` also has a walk-through run and a hypothesis-only diagnostic run, which are not candidates for model 1. All results are in the notebooks, sections "Results" and "Conclusion". The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
 
 ## References
 
@@ -79,7 +79,7 @@ Lecture slides:
 - Marfurt, A. (2026, September 24). *Word Embeddings* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026, September 29). *Recurrent Neural Networks* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026, October 6). *Advanced RNNs* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
-- Marfurt, A. (2026). *Project Discussions* [Lecture slides, weeks 1–6]. NLP HS26, Lucerne University of Applied Sciences and Arts.
+- Marfurt, A. (2026). *Project Discussions* [Lecture slides, weeks 1–7]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 
 Exercise notebooks:
 
@@ -104,6 +104,7 @@ Exercise notebooks:
 - Gururangan, S., Swayamdipta, S., Levy, O., Schwartz, R., Bowman, S. R., & Smith, N. A. (2018). Annotation Artifacts in Natural Language Inference Data. *Proceedings of NAACL-HLT 2018*. https://arxiv.org/abs/1803.02324
 - Poliak, A., Naradowsky, J., Haldar, A., Rudinger, R., & Van Durme, B. (2018). Hypothesis Only Baselines in Natural Language Inference. *Proceedings of the Seventh Joint Conference on Lexical and Computational Semantics (\*SEM 2018)*, 180–191. https://arxiv.org/abs/1805.01042
 - Loshchilov, I., & Hutter, F. (2019). Decoupled Weight Decay Regularization. *International Conference on Learning Representations (ICLR 2019)*. https://arxiv.org/abs/1711.05101
+- McNemar, Q. (1947). Note on the sampling error of the difference between correlated proportions or percentages. *Psychometrika, 12*(2), 153–157. https://doi.org/10.1007/BF02295996
 - Hägele, A., Bakouch, E., Kosson, A., Ben Allal, L., Von Werra, L., & Jaggi, M. (2024). Scaling Laws and Compute-Optimal Training Beyond Fixed Training Durations. *arXiv preprint arXiv:2405.18392*. https://arxiv.org/abs/2405.18392 (cited on slide 33 of the course slides "Project Discussions")
 
 ### Software
@@ -116,6 +117,7 @@ Exercise notebooks:
 - McKinney, W. (2010). Data Structures for Statistical Computing in Python. *Proceedings of the 9th Python in Science Conference*, 56–61. (pandas)
 - Hunter, J. D. (2007). Matplotlib: A 2D Graphics Environment. *Computing in Science & Engineering, 9*(3), 90–95.
 - Biewald, L. (2020). *Experiment Tracking with Weights and Biases*. Software available from https://wandb.ai/
+- Virtanen, P., Gommers, R., Oliphant, T. E., et al. (2020). SciPy 1.0: Fundamental Algorithms for Scientific Computing in Python. *Nature Methods, 17*, 261–272. https://doi.org/10.1038/s41592-019-0686-2
 
 ### Documentation and tutorials (accessed October 2026)
 
@@ -160,6 +162,12 @@ Exercise notebooks:
 - Python documentation: `time` module (`time.time()`), https://docs.python.org/3/library/time.html
 - Python documentation: set types (`^` and `<=`), https://docs.python.org/3/builtins/stdtypes.html#set-types-set-frozenset
 - Python tutorial: "Comparing Sequences and Other Types" (`==` on lists), https://docs.python.org/3/tutorial/datastructures.html#comparing-sequences-and-other-types
+- Python documentation: the `assert` statement, https://docs.python.org/3/reference/simple_stmts.html#the-assert-statement
+- PyTorch documentation: `torch.bitwise_and`, https://docs.pytorch.org/docs/stable/generated/torch.bitwise_and.html, and `torch.bitwise_not`, https://docs.pytorch.org/docs/stable/generated/torch.bitwise_not.html
+- PyTorch documentation: `torch.nonzero`, https://docs.pytorch.org/docs/stable/generated/torch.nonzero.html
+- SciPy documentation: `scipy.stats.binomtest`, https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html
+- Wikipedia: "McNemar's test" (exact binomial test), https://en.wikipedia.org/wiki/McNemar%27s_test
+- Wikipedia: "Two-proportion Z-test" (standard error of a difference between two proportions), https://en.wikipedia.org/wiki/Two-proportion_Z-test
 
 ## Use of AI
 
