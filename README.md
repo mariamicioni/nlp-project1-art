@@ -47,25 +47,25 @@ Then open the notebooks with the `.venv` kernel and run them in order:
 2. `02_preprocessing.ipynb` – preprocessing decisions, choice of word embeddings and the input of both models
 3. `03_model1_embeddings.ipynb` – model 1: training, experiments, results
 4. `04_model2_rnn.ipynb` – model 2: training, experiments, results
-5. `04b_preprocessing_experiments.ipynb` – the preprocessing decisions tested by training, one option at a time; the test set is not loaded
-6. `05_evaluation.ipynb` – the chosen model of each architecture on the test set, and the hypothesis-only run as a diagnostic
+5. `04b_preprocessing_experiments.ipynb` – the preprocessing decisions and the input format tested by training, one option at a time; the test set is not loaded
+6. `05_evaluation.ipynb` – the chosen model of each architecture on the test set, and the hypothesis-only runs as diagnostics
 
 The GloVe embeddings (about 400 MB) are downloaded automatically the first time. The comparison cell in `02_preprocessing.ipynb` also downloads fastText and word2vec (about 2.7 GB); you can skip it, the results are saved in the notebook.
 
 `02_preprocessing.ipynb` saves the input features of model 1 to `features/model1.npz` (about 93 MB), which `03_model1_embeddings.ipynb` loads, and the input of model 2 (padded token indices and the GloVe embedding matrix) to `features/model2.npz` (about 40 MB), which `04_model2_rnn.ipynb` loads. The files are not in the repository because they can be recreated, so run `02_preprocessing.ipynb` before the training notebooks.
 
-Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the two chosen runs, so run `03` and `04` before it. All runs use seed 42 and give the same results when they are run again. On my laptop CPU (Intel Core i7-1360P, no GPU), `03_model1_embeddings.ipynb` takes about 55 minutes (33 runs), `04_model2_rnn.ipynb` about 3.9 hours (25 runs) and `04b_preprocessing_experiments.ipynb` about 2.5 hours (31 runs).
+Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the chosen runs and of the hypothesis-only runs, so run `03`, `04` and `04b` before it. Every run has a fixed seed: 42, or 1 and 2 in the sections "Other seeds". A run gives the same results when it is run again on the same machine. On my laptop CPU (Intel Core i7-1360P, no GPU), `03_model1_embeddings.ipynb` takes about 1 hour (38 runs), `04_model2_rnn.ipynb` about 4.3 hours (28 runs) and `04b_preprocessing_experiments.ipynb` about 2.6 hours (34 runs).
 
 ## Results
 
-All choices were made on the validation set; the test set is evaluated once, in `05_evaluation.ipynb`. For each architecture, the run with the lowest validation loss is chosen, and from that run the epoch with the lowest validation loss.
+All choices were made on the validation set; the test set is evaluated once, in `05_evaluation.ipynb`. For each architecture, the run with the lowest validation loss among the grid and sweep runs is chosen, and from that run the epoch with the lowest validation loss. The walk-through, diagnostic and seed runs are not candidates. The variants in `04b` check the preprocessing decisions with their own, stricter rule (lower validation loss and significantly more correct predictions), so a variant with only a lower validation loss is not chosen.
 
 | Model | Chosen configuration | Best epoch | Validation loss | Validation accuracy |
 |---|---|---|---|---|
 | Model 1: averaged GloVe vectors + 2-layer classifier | 100 hidden units, learning rate 0.000316, batch size 32 | 13 | 0.6445 | 63.20% |
 | Model 2: GloVe + 2-layer RNN + 2-layer classifier | GRU, RNN hidden size 128, learning rate 0.001, dropout 0.5 | 4 | 0.5872 | 67.60% |
 
-Experiments: model 1 with 31 runs: 12 in a first grid (50/100/300 hidden units × learning rate 0.01/0.001/0.0001, one step beyond the tested range: learning rate 0.00001 and 1000 hidden units, and the best configuration with layer normalization) and 19 in W&B sweeps (learning rate 3.16e-4/1e-4/3.16e-5 × 100/300/600 hidden units × batch size 32/128, and 50 hidden units beyond the tested range). Model 2 with 25 runs: 13 in a first grid (LSTM/GRU × learning rate 0.01/0.001/0.0001, dropout 0.2/0.5/0.7 with learning rate 0.001, and the best configuration with layer normalization in the classifier) and 12 in a W&B sweep (GRU, RNN hidden size 64/128/256 × learning rate 1e-3/3.16e-4 × dropout 0.5/0.7). Notebook `03` also has a walk-through run and a hypothesis-only diagnostic run, which are not candidates for model 1. Notebook `04b` tests the preprocessing decisions with 16 runs for model 1 and 15 runs for model 2; these runs check the decisions and are not candidates for the chosen models unless a variant meets the rule stated there. Each configuration has one seed, and the sweep winner of model 1 is not shown to be better than the best run of the first grid (exact McNemar test, p = 0.8546). All results are in the notebooks, sections "Results" and "Conclusion". The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
+Experiments: model 1 with 32 runs: 13 in a first grid (50/100/300 hidden units × learning rate 0.01/0.001/0.0001, one step beyond the tested range: learning rate 0.00001 and 1000 hidden units, one run with more epochs because its best epoch was its last, and the best configuration with layer normalization) and 19 in W&B sweeps (learning rate 3.16e-4/1e-4/3.16e-5 × 100/300/600 hidden units × batch size 32/128, and 50 hidden units beyond the tested range). Model 2 with 26 runs: 13 in a first grid (LSTM/GRU × learning rate 0.01/0.001/0.0001, dropout 0.2/0.5/0.7 with learning rate 0.001, and the best configuration with layer normalization in the classifier) 12 in a W&B sweep (GRU, RNN hidden size 64/128/256 × learning rate 1e-3/3.16e-4 × dropout 0.5/0.7) and one with batch size 128. Notebook `03` also has a walk-through run and a hypothesis-only diagnostic run, which are not candidates for model 1. Notebook `04b` tests the preprocessing decisions and the input format with 17 runs for model 1 and 17 runs for model 2; no variant meets the decision rule stated there, so the preprocessing of `02` stays. The experiments use one seed per configuration; the chosen configurations are also trained with seeds 1 and 2, and these runs are only reported (sections "Other seeds"; for model 1 also the best run of the first grid). The sweep winner of model 1 is not shown to be better than the best run of the first grid (exact McNemar test, p = 0.8546). All results are in the notebooks, sections "Results" and "Conclusion". The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
 
 ## References
 
@@ -78,6 +78,7 @@ Lecture slides:
 - Marfurt, A. (2026, September 15). *Course Project HS26* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026). *Project 1: Word Embeddings/Recurrent Neural Networks* [Project description]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026, September 15). *Preliminaries* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
+- Marfurt, A. (2026, September 17). *NLP Pipeline* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026, September 22). *Vector Space Model* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026, September 24). *Word Embeddings* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026, September 29). *Recurrent Neural Networks* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
@@ -185,12 +186,16 @@ Exercise notebooks:
 - NumPy documentation: `numpy.transpose`, https://numpy.org/doc/stable/reference/generated/numpy.transpose.html, and `numpy.array_equal`, https://numpy.org/doc/stable/reference/generated/numpy.array_equal.html
 - Python documentation: `dict.get`, https://docs.python.org/3/library/stdtypes.html#dict.get
 - scikit-learn documentation: "Permutation feature importance", https://scikit-learn.org/stable/modules/permutation_importance.html
+- Weights & Biases documentation (now at docs.coreweave.com): "Environment variables" (`WANDB_SILENT`), https://docs.coreweave.com/models/track/environment-variables
+- Python documentation: `os.environ`, https://docs.python.org/3/library/os.html#os.environ
+- PyTorch documentation: `torch.flip`, https://docs.pytorch.org/docs/stable/generated/torch.flip.html, `torch.randn`, https://docs.pytorch.org/docs/stable/generated/torch.randn.html, and `torch.max`, https://docs.pytorch.org/docs/stable/generated/torch.max.html
+- NumPy documentation: `numpy.random.default_rng` and `Generator.normal`, https://numpy.org/doc/stable/reference/random/generator.html, and "Indexing on ndarrays", https://numpy.org/doc/stable/user/basics.indexing.html
 - PyTorch documentation: `torch.randperm`, https://docs.pytorch.org/docs/stable/generated/torch.randperm.html, and `Tensor.clone`, https://docs.pytorch.org/docs/stable/generated/torch.Tensor.clone.html
 
 ## Use of AI
 
-I used the following AI tools. All decisions are my own, and I reviewed, ran and understood all code before committing it.
+I used the following AI tools. I reviewed the code and the results, and I can explain them.
 
-- **Claude (Anthropic):** help with coding and documentation; finding and checking sources for the citations.
-- **ChatGPT (OpenAI):** reviews of the project, general questions, and style checks.
+- **Claude (Anthropic):** help with coding and documentation, including the code of the W&B sweeps, the runs with other seeds, the check of the hypothesis positions in `04_model2_rnn.ipynb` and `04b_preprocessing_experiments.ipynb`; finding and checking sources for the citations.
+- **ChatGPT (OpenAI):** reviews of the project, general questions, and style checks; its corrections were checked before they were adopted.
 - **Gemini (Google):** a review of the code and the experiments; its suggestions were checked, and only some of them were adopted.
