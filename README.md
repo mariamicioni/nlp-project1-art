@@ -21,6 +21,8 @@ The dataset contains:
 
 The training set is used to train the models, the validation set for hyperparameter tuning and model selection, and the test set for final evaluation.
 
+The course made its own splits from the original dataset [`allenai/art`](https://huggingface.co/datasets/allenai/art) (course slides "Course Project HS26", slide 8), and they differ in difficulty. I compared the texts of the examples with `allenai/art`: all 16,801 training and all 1,000 validation examples occur in its train split, and all 1,532 test examples in its validation split. The paper says about the original dataset: "The train set includes all plausible and implausible hypotheses collected via crowdsourcing, while the dev and test sets include the hypotheses selected through the Adversarial Filtering algorithm" (Bhagavatula et al., 2020, Table 6). So the course training and validation data are unfiltered and the test data is adversarially filtered, and the validation accuracy is expected to be higher than the test accuracy.
+
 The notebooks load the dataset directly from Hugging Face with `load_dataset("amarfurt/art-nlp-hs26", split=...)`, so no manual download is needed.
 
 ## How to run it
@@ -51,7 +53,7 @@ The GloVe embeddings (about 400 MB) are downloaded automatically the first time.
 
 `02_preprocessing.ipynb` saves the input features of model 1 to `features/model1.npz` (about 93 MB), which `03_model1_embeddings.ipynb` loads, and the input of model 2 (padded word numbers and the GloVe embedding matrix) to `features/model2.npz` (about 40 MB), which `04_model2_rnn.ipynb` loads. The files are not in the repository because they can be recreated, so run `02_preprocessing.ipynb` before the training notebooks.
 
-Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the two chosen runs, so run `03` and `04` before it. All runs use seed 42 and give the same results when they are run again. On my laptop CPU (Intel Core i7-1360P, no GPU), `03_model1_embeddings.ipynb` takes about 15 minutes (11 runs) and `04_model2_rnn.ipynb` about 1.5 hours (12 runs).
+Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the two chosen runs, so run `03` and `04` before it. All runs use seed 42 and give the same results when they are run again. On my laptop CPU (Intel Core i7-1360P, no GPU), `03_model1_embeddings.ipynb` takes about 30 minutes (13 runs) and `04_model2_rnn.ipynb` about 1.5 hours (12 runs).
 
 ## Results
 
@@ -62,7 +64,7 @@ All choices were made on the validation set; the test set is evaluated once, in 
 | Model 1: averaged GloVe vectors + 2-layer classifier | hidden size 300, learning rate 0.0001 | 14 | 0.6479 | 62.90% |
 | Model 2: GloVe + 2-layer RNN + 2-layer classifier | GRU, hidden size 128, learning rate 0.001, dropout 0.5 | 4 | 0.5872 | 67.60% |
 
-Experiments: model 1 with 9 runs (hidden size 50/100/300 × learning rate 0.01/0.001/0.0001), model 2 with 12 runs (LSTM/GRU × learning rate 0.01/0.001/0.0001, and dropout 0.2/0.5/0.7 with learning rate 0.001). Notebook `03` also has a walk-through run and a hypothesis-only diagnostic run, which are not candidates for model 1. All results are in the notebooks, sections "Results" and "Conclusion". The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
+Experiments: model 1 with 11 runs (hidden size 50/100/300 × learning rate 0.01/0.001/0.0001, and one step beyond the boundary: learning rate 0.00001 and hidden size 1000), model 2 with 12 runs (LSTM/GRU × learning rate 0.01/0.001/0.0001, and dropout 0.2/0.5/0.7 with learning rate 0.001). Notebook `03` also has a walk-through run and a hypothesis-only diagnostic run, which are not candidates for model 1. All results are in the notebooks, sections "Results" and "Conclusion". The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
 
 ## References
 
@@ -150,7 +152,8 @@ Exercise notebooks:
 - Weights & Biases documentation: "Log objects and media" (`run.log`, `epoch` as custom x-axis), https://docs.wandb.ai/models/track/log
 - PyTorch tutorial "Save and Load the Model": https://docs.pytorch.org/tutorials/beginner/basics/saveloadrun_tutorial.html
 - Python documentation: built-in function `float` (`float("inf")`), https://docs.python.org/3/library/functions.html#float
-- Python documentation: built-in functions `all()`, `any()` and `ord()`, https://docs.python.org/3/library/functions.html
+- Python documentation: built-in functions `all()`, `any()`, `ord()` and `zip()`, https://docs.python.org/3/library/functions.html
+- Python documentation: conditional expressions, https://docs.python.org/3/reference/expressions.html#conditional-expressions
 - Python documentation: `string.punctuation`, https://docs.python.org/3/library/string.html#string.punctuation
 - Python documentation: `re` (regular expressions, `re.search`), https://docs.python.org/3/library/re.html
 - NLTK documentation: "Installing NLTK Data" (`nltk.download`), https://www.nltk.org/data.html, and `nltk.probability.FreqDist`, https://www.nltk.org/api/nltk.probability.FreqDist.html
