@@ -47,13 +47,14 @@ Then open the notebooks with the `.venv` kernel and run them in order:
 2. `02_preprocessing.ipynb` – preprocessing decisions, choice of word embeddings and the input of both models
 3. `03_model1_embeddings.ipynb` – model 1: training, experiments, results
 4. `04_model2_rnn.ipynb` – model 2: training, experiments, results
-5. `05_evaluation.ipynb` – the chosen model of each architecture on the test set, and the hypothesis-only run as a diagnostic
+5. `04b_preprocessing_experiments.ipynb` – the preprocessing decisions tested by training, one option at a time; the test set is not loaded
+6. `05_evaluation.ipynb` – the chosen model of each architecture on the test set, and the hypothesis-only run as a diagnostic
 
 The GloVe embeddings (about 400 MB) are downloaded automatically the first time. The comparison cell in `02_preprocessing.ipynb` also downloads fastText and word2vec (about 2.7 GB); you can skip it, the results are saved in the notebook.
 
-`02_preprocessing.ipynb` saves the input features of model 1 to `features/model1.npz` (about 93 MB), which `03_model1_embeddings.ipynb` loads, and the input of model 2 (padded word numbers and the GloVe embedding matrix) to `features/model2.npz` (about 40 MB), which `04_model2_rnn.ipynb` loads. The files are not in the repository because they can be recreated, so run `02_preprocessing.ipynb` before the training notebooks.
+`02_preprocessing.ipynb` saves the input features of model 1 to `features/model1.npz` (about 93 MB), which `03_model1_embeddings.ipynb` loads, and the input of model 2 (padded token indices and the GloVe embedding matrix) to `features/model2.npz` (about 40 MB), which `04_model2_rnn.ipynb` loads. The files are not in the repository because they can be recreated, so run `02_preprocessing.ipynb` before the training notebooks.
 
-Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the two chosen runs, so run `03` and `04` before it. All runs use seed 42 and give the same results when they are run again. On my laptop CPU (Intel Core i7-1360P, no GPU), `03_model1_embeddings.ipynb` takes about 35 minutes (14 runs) and `04_model2_rnn.ipynb` about 1.7 hours (13 runs).
+Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the two chosen runs, so run `03` and `04` before it. All runs use seed 42 and give the same results when they are run again. On my laptop CPU (Intel Core i7-1360P, no GPU), `03_model1_embeddings.ipynb` takes about 55 minutes (33 runs), `04_model2_rnn.ipynb` about 3.9 hours (25 runs) and `04b_preprocessing_experiments.ipynb` about 2.5 hours (31 runs).
 
 ## Results
 
@@ -61,10 +62,10 @@ All choices were made on the validation set; the test set is evaluated once, in 
 
 | Model | Chosen configuration | Best epoch | Validation loss | Validation accuracy |
 |---|---|---|---|---|
-| Model 1: averaged GloVe vectors + 2-layer classifier | hidden size 300, learning rate 0.0001 | 14 | 0.6479 | 62.90% |
-| Model 2: GloVe + 2-layer RNN + 2-layer classifier | GRU, hidden size 128, learning rate 0.001, dropout 0.5 | 4 | 0.5872 | 67.60% |
+| Model 1: averaged GloVe vectors + 2-layer classifier | 100 hidden units, learning rate 0.000316, batch size 32 | 13 | 0.6445 | 63.20% |
+| Model 2: GloVe + 2-layer RNN + 2-layer classifier | GRU, RNN hidden size 128, learning rate 0.001, dropout 0.5 | 4 | 0.5872 | 67.60% |
 
-Experiments: model 1 with 12 runs (hidden size 50/100/300 × learning rate 0.01/0.001/0.0001, one step beyond the tested range: learning rate 0.00001 and hidden size 1000, and the best configuration with layer normalization), model 2 with 13 runs (LSTM/GRU × learning rate 0.01/0.001/0.0001, dropout 0.2/0.5/0.7 with learning rate 0.001, and the best configuration with layer normalization in the classifier). Notebook `03` also has a walk-through run and a hypothesis-only diagnostic run, which are not candidates for model 1. All results are in the notebooks, sections "Results" and "Conclusion". The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
+Experiments: model 1 with 31 runs: 12 in a first grid (50/100/300 hidden units × learning rate 0.01/0.001/0.0001, one step beyond the tested range: learning rate 0.00001 and 1000 hidden units, and the best configuration with layer normalization) and 19 in W&B sweeps (learning rate 3.16e-4/1e-4/3.16e-5 × 100/300/600 hidden units × batch size 32/128, and 50 hidden units beyond the tested range). Model 2 with 25 runs: 13 in a first grid (LSTM/GRU × learning rate 0.01/0.001/0.0001, dropout 0.2/0.5/0.7 with learning rate 0.001, and the best configuration with layer normalization in the classifier) and 12 in a W&B sweep (GRU, RNN hidden size 64/128/256 × learning rate 1e-3/3.16e-4 × dropout 0.5/0.7). Notebook `03` also has a walk-through run and a hypothesis-only diagnostic run, which are not candidates for model 1. Notebook `04b` tests the preprocessing decisions with 16 runs for model 1 and 15 runs for model 2; these runs check the decisions and are not candidates for the chosen models unless a variant meets the rule stated there. Each configuration has one seed, and the sweep winner of model 1 is not shown to be better than the best run of the first grid (exact McNemar test, p = 0.8546). All results are in the notebooks, sections "Results" and "Conclusion". The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
 
 ## References
 
@@ -81,6 +82,7 @@ Lecture slides:
 - Marfurt, A. (2026, September 24). *Word Embeddings* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026, September 29). *Recurrent Neural Networks* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026, October 6). *Advanced RNNs* [Lecture slides]. NLP HS26, Lucerne University of Applied Sciences and Arts.
+- Marfurt, A. (2026). *Grading criteria HS26* [Course document]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 - Marfurt, A. (2026). *Project Discussions* [Lecture slides, weeks 1–7]. NLP HS26, Lucerne University of Applied Sciences and Arts.
 
 Exercise notebooks:
@@ -107,6 +109,7 @@ Exercise notebooks:
 - Gururangan, S., Swayamdipta, S., Levy, O., Schwartz, R., Bowman, S. R., & Smith, N. A. (2018). Annotation Artifacts in Natural Language Inference Data. *Proceedings of NAACL-HLT 2018*. https://arxiv.org/abs/1803.02324
 - Poliak, A., Naradowsky, J., Haldar, A., Rudinger, R., & Van Durme, B. (2018). Hypothesis Only Baselines in Natural Language Inference. *Proceedings of the Seventh Joint Conference on Lexical and Computational Semantics (\*SEM 2018)*, 180–191. https://arxiv.org/abs/1805.01042
 - Loshchilov, I., & Hutter, F. (2019). Decoupled Weight Decay Regularization. *International Conference on Learning Representations (ICLR 2019)*. https://arxiv.org/abs/1711.05101
+- Holm, S. (1979). A simple sequentially rejective multiple test procedure. *Scandinavian Journal of Statistics, 6*(2), 65–70.
 - McNemar, Q. (1947). Note on the sampling error of the difference between correlated proportions or percentages. *Psychometrika, 12*(2), 153–157. https://doi.org/10.1007/BF02295996
 - Breiman, L. (2001). Random Forests. *Machine Learning, 45*(1), 5–32. https://doi.org/10.1023/A:1010933404324
 - Hägele, A., Bakouch, E., Kosson, A., Ben Allal, L., Von Werra, L., & Jaggi, M. (2024). Scaling Laws and Compute-Optimal Training Beyond Fixed Training Durations. *arXiv preprint arXiv:2405.18392*. https://arxiv.org/abs/2405.18392 (cited on slide 33 of the course slides "Project Discussions")
@@ -146,7 +149,6 @@ Exercise notebooks:
 - PyTorch documentation: "Reproducibility" (`torch.manual_seed`), https://docs.pytorch.org/docs/stable/notes/randomness.html
 - PyTorch documentation: `torch.utils.data` (`DataLoader`, `TensorDataset`), https://docs.pytorch.org/docs/stable/data.html
 - PyTorch documentation: `torch.mean`, https://docs.pytorch.org/docs/stable/generated/torch.mean.html
-- Wikipedia: "Binomial proportion confidence interval" (normal approximation, standard error √(p(1 − p)/n)), https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval
 - scikit-learn glossary (naming convention `X` and `y`): https://scikit-learn.org/stable/glossary.html
 - Weights & Biases quickstart (`wandb.init` with `project` and `config`): https://docs.wandb.ai/models/quickstart
 - Weights & Biases documentation: `wandb.init()` reference (`project`, `name`, `config`), https://docs.wandb.ai/models/ref/python/functions/init
@@ -176,7 +178,12 @@ Exercise notebooks:
 - PyTorch documentation: `torch.nonzero`, https://docs.pytorch.org/docs/stable/generated/torch.nonzero.html
 - SciPy documentation: `scipy.stats.binomtest`, https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html
 - Wikipedia: "McNemar's test" (exact binomial test), https://en.wikipedia.org/wiki/McNemar%27s_test
-- Wikipedia: "Two-proportion Z-test" (standard error of a difference between two proportions), https://en.wikipedia.org/wiki/Two-proportion_Z-test
+- Wikipedia: "Holm–Bonferroni method", https://en.wikipedia.org/wiki/Holm%E2%80%93Bonferroni_method
+- Weights & Biases documentation (now at docs.coreweave.com): sweep configuration, https://docs.coreweave.com/models/sweeps/define-sweep-configuration; its options, https://docs.coreweave.com/models/sweeps/sweep-config-keys; sweeps walkthrough, https://docs.coreweave.com/models/sweeps/walkthrough; run config, https://docs.coreweave.com/models/track/config; `Run`, https://docs.coreweave.com/models/ref/python/experiments/run
+- NLTK documentation: `nltk.tag` (`pos_tag`), https://www.nltk.org/api/nltk.tag.html; `PerceptronTagger`, https://www.nltk.org/api/nltk.tag.perceptron.html; `WordNetLemmatizer.lemmatize`, https://www.nltk.org/api/nltk.stem.wordnet.html; `upenn_tagset`, https://www.nltk.org/api/nltk.help.html
+- PyTorch documentation: `torch.clamp`, https://docs.pytorch.org/docs/stable/generated/torch.clamp.html
+- NumPy documentation: `numpy.transpose`, https://numpy.org/doc/stable/reference/generated/numpy.transpose.html, and `numpy.array_equal`, https://numpy.org/doc/stable/reference/generated/numpy.array_equal.html
+- Python documentation: `dict.get`, https://docs.python.org/3/library/stdtypes.html#dict.get
 - scikit-learn documentation: "Permutation feature importance", https://scikit-learn.org/stable/modules/permutation_importance.html
 - PyTorch documentation: `torch.randperm`, https://docs.pytorch.org/docs/stable/generated/torch.randperm.html, and `Tensor.clone`, https://docs.pytorch.org/docs/stable/generated/torch.Tensor.clone.html
 
