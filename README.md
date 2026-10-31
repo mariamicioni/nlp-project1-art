@@ -53,7 +53,7 @@ The GloVe embeddings (about 400 MB) are downloaded automatically the first time.
 
 `02_preprocessing.ipynb` saves the input features of model 1 to `features/model1.npz` (about 93 MB), which `03_model1_embeddings.ipynb` loads, and the input of model 2 (padded word numbers and the GloVe embedding matrix) to `features/model2.npz` (about 40 MB), which `04_model2_rnn.ipynb` loads. The files are not in the repository because they can be recreated, so run `02_preprocessing.ipynb` before the training notebooks.
 
-Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the two chosen runs, so run `03` and `04` before it. All runs use seed 42 and give the same results when they are run again. On my laptop CPU (Intel Core i7-1360P, no GPU), `03_model1_embeddings.ipynb` takes about 30 minutes (13 runs) and `04_model2_rnn.ipynb` about 1.5 hours (12 runs).
+Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the two chosen runs, so run `03` and `04` before it. All runs use seed 42 and give the same results when they are run again. On my laptop CPU (Intel Core i7-1360P, no GPU), `03_model1_embeddings.ipynb` takes about 35 minutes (14 runs) and `04_model2_rnn.ipynb` about 1.5 hours (12 runs).
 
 ## Results
 
@@ -64,7 +64,7 @@ All choices were made on the validation set; the test set is evaluated once, in 
 | Model 1: averaged GloVe vectors + 2-layer classifier | hidden size 300, learning rate 0.0001 | 14 | 0.6479 | 62.90% |
 | Model 2: GloVe + 2-layer RNN + 2-layer classifier | GRU, hidden size 128, learning rate 0.001, dropout 0.5 | 4 | 0.5872 | 67.60% |
 
-Experiments: model 1 with 11 runs (hidden size 50/100/300 × learning rate 0.01/0.001/0.0001, and one step beyond the boundary: learning rate 0.00001 and hidden size 1000), model 2 with 12 runs (LSTM/GRU × learning rate 0.01/0.001/0.0001, and dropout 0.2/0.5/0.7 with learning rate 0.001). Notebook `03` also has a walk-through run and a hypothesis-only diagnostic run, which are not candidates for model 1. All results are in the notebooks, sections "Results" and "Conclusion". The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
+Experiments: model 1 with 12 runs (hidden size 50/100/300 × learning rate 0.01/0.001/0.0001, one step beyond the tested range: learning rate 0.00001 and hidden size 1000, and the best configuration with layer normalization), model 2 with 12 runs (LSTM/GRU × learning rate 0.01/0.001/0.0001, and dropout 0.2/0.5/0.7 with learning rate 0.001). Notebook `03` also has a walk-through run and a hypothesis-only diagnostic run, which are not candidates for model 1. All results are in the notebooks, sections "Results" and "Conclusion". The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
 
 ## References
 
@@ -103,6 +103,7 @@ Exercise notebooks:
 - Lu, L., Shin, Y., Su, Y., & Karniadakis, G. E. (2020). Dying ReLU and Initialization: Theory and Numerical Examples. *Communications in Computational Physics*. https://doi.org/10.4208/cicp.OA-2020-0165
 - Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014). Dropout: A Simple Way to Prevent Neural Networks from Overfitting. *Journal of Machine Learning Research, 15*(56), 1929–1958. https://jmlr.org/papers/v15/srivastava14a.html
 - Zaremba, W., Sutskever, I., & Vinyals, O. (2014). Recurrent Neural Network Regularization. *arXiv preprint arXiv:1409.2329*. https://arxiv.org/abs/1409.2329
+- Ba, J. L., Kiros, J. R., & Hinton, G. E. (2016). Layer Normalization. *arXiv preprint arXiv:1607.06450*. https://arxiv.org/abs/1607.06450
 - Gururangan, S., Swayamdipta, S., Levy, O., Schwartz, R., Bowman, S. R., & Smith, N. A. (2018). Annotation Artifacts in Natural Language Inference Data. *Proceedings of NAACL-HLT 2018*. https://arxiv.org/abs/1803.02324
 - Poliak, A., Naradowsky, J., Haldar, A., Rudinger, R., & Van Durme, B. (2018). Hypothesis Only Baselines in Natural Language Inference. *Proceedings of the Seventh Joint Conference on Lexical and Computational Semantics (\*SEM 2018)*, 180–191. https://arxiv.org/abs/1805.01042
 - Loshchilov, I., & Hutter, F. (2019). Decoupled Weight Decay Regularization. *International Conference on Learning Representations (ICLR 2019)*. https://arxiv.org/abs/1711.05101
@@ -162,6 +163,8 @@ Exercise notebooks:
 - Karpathy, A. (2019, April 25). *A Recipe for Training Neural Networks* [Blog post] ("overfit one batch"). https://karpathy.github.io/2019/04/25/recipe/
 - PyTorch documentation: `torch.equal`, https://docs.pytorch.org/docs/stable/generated/torch.equal.html
 - PyTorch documentation: `torch.nn.Dropout`, https://docs.pytorch.org/docs/stable/generated/torch.nn.Dropout.html
+- PyTorch documentation: `torch.nn.LayerNorm`, https://docs.pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html
+- PyTorch documentation: `torch.numel`, https://docs.pytorch.org/docs/stable/generated/torch.numel.html
 - PyTorch documentation: `torch.optim.AdamW` (algorithm), https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html
 - Python documentation: `time` module (`time.time()`), https://docs.python.org/3/library/time.html
 - Python documentation: set types (`^` and `<=`), https://docs.python.org/3/builtins/stdtypes.html#set-types-set-frozenset
