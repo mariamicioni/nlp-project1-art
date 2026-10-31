@@ -53,7 +53,7 @@ The GloVe embeddings (about 400 MB) are downloaded automatically the first time.
 
 `02_preprocessing.ipynb` saves the input features of model 1 to `features/model1.npz` (about 93 MB), which `03_model1_embeddings.ipynb` loads, and the input of model 2 (padded word numbers and the GloVe embedding matrix) to `features/model2.npz` (about 40 MB), which `04_model2_rnn.ipynb` loads. The files are not in the repository because they can be recreated, so run `02_preprocessing.ipynb` before the training notebooks.
 
-Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the two chosen runs, so run `03` and `04` before it. All runs use seed 42 and give the same results when they are run again. On my laptop CPU (Intel Core i7-1360P, no GPU), `03_model1_embeddings.ipynb` takes about 35 minutes (14 runs) and `04_model2_rnn.ipynb` about 1.5 hours (12 runs).
+Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the two chosen runs, so run `03` and `04` before it. All runs use seed 42 and give the same results when they are run again. On my laptop CPU (Intel Core i7-1360P, no GPU), `03_model1_embeddings.ipynb` takes about 35 minutes (14 runs) and `04_model2_rnn.ipynb` about 1.7 hours (13 runs).
 
 ## Results
 
@@ -64,7 +64,7 @@ All choices were made on the validation set; the test set is evaluated once, in 
 | Model 1: averaged GloVe vectors + 2-layer classifier | hidden size 300, learning rate 0.0001 | 14 | 0.6479 | 62.90% |
 | Model 2: GloVe + 2-layer RNN + 2-layer classifier | GRU, hidden size 128, learning rate 0.001, dropout 0.5 | 4 | 0.5872 | 67.60% |
 
-Experiments: model 1 with 12 runs (hidden size 50/100/300 × learning rate 0.01/0.001/0.0001, one step beyond the tested range: learning rate 0.00001 and hidden size 1000, and the best configuration with layer normalization), model 2 with 12 runs (LSTM/GRU × learning rate 0.01/0.001/0.0001, and dropout 0.2/0.5/0.7 with learning rate 0.001). Notebook `03` also has a walk-through run and a hypothesis-only diagnostic run, which are not candidates for model 1. All results are in the notebooks, sections "Results" and "Conclusion". The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
+Experiments: model 1 with 12 runs (hidden size 50/100/300 × learning rate 0.01/0.001/0.0001, one step beyond the tested range: learning rate 0.00001 and hidden size 1000, and the best configuration with layer normalization), model 2 with 13 runs (LSTM/GRU × learning rate 0.01/0.001/0.0001, dropout 0.2/0.5/0.7 with learning rate 0.001, and the best configuration with layer normalization in the classifier). Notebook `03` also has a walk-through run and a hypothesis-only diagnostic run, which are not candidates for model 1. All results are in the notebooks, sections "Results" and "Conclusion". The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
 
 ## References
 
@@ -165,6 +165,8 @@ Exercise notebooks:
 - PyTorch documentation: `torch.nn.Dropout`, https://docs.pytorch.org/docs/stable/generated/torch.nn.Dropout.html
 - PyTorch documentation: `torch.nn.LayerNorm`, https://docs.pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html
 - PyTorch documentation: `torch.numel`, https://docs.pytorch.org/docs/stable/generated/torch.numel.html
+- PyTorch documentation: `torch.nn.Sequential`, https://docs.pytorch.org/docs/stable/generated/torch.nn.Sequential.html
+- Python documentation: tutorial "Classes" (inheritance), https://docs.python.org/3/tutorial/classes.html#inheritance
 - PyTorch documentation: `torch.optim.AdamW` (algorithm), https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html
 - Python documentation: `time` module (`time.time()`), https://docs.python.org/3/library/time.html
 - Python documentation: set types (`^` and `<=`), https://docs.python.org/3/builtins/stdtypes.html#set-types-set-frozenset
