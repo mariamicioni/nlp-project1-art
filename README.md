@@ -39,7 +39,7 @@ Each model is selected by the lowest validation loss among its candidate runs (3
 | Model 1 | 600 hidden units, learning rate 0.000316, batch size 2048 | 40 | 0.6460 | 64.00% | 0.6463 / 63.16% | pending |
 | Model 2 | GRU, layer norm in the classifier, RNN hidden size 128, learning rate 0.001, dropout 0.5, batch size 128 | 6 | 0.5867 | 66.70% | 0.5942 / 67.28% | pending |
 
-Reported only, not candidates: other seeds, the next values of model 1, the hypothesis-only runs and the variants of `04b`. Per-choice scoring of model 1 meets the decision rule of `04b` (0.5858, 68.90%, p = 0.0029) and is evaluated in `05` as a separate comparison. Details are in the conclusion of each notebook.
+Reported only, not candidates: other seeds, the next values of model 1, weight decay on model 2, the hypothesis-only runs and the variants of `04b`. Per-choice scoring of model 1 meets the decision rule of `04b` (0.5858, 68.90%, p = 0.0029) and is evaluated in `05` as a separate comparison. Details are in the conclusion of each notebook.
 
 Expected test accuracies, written before the experiments (`EXPECTATIONS.md`): model 1 52%, model 2 53%.
 
