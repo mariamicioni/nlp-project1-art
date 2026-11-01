@@ -1,83 +1,53 @@
 # NLP HS26 – Project 1: Word Embeddings and RNNs
 
-This project focuses on abductive commonsense reasoning using the ART dataset. Given the beginning and end of a short story, the model selects the more plausible of two possible explanations.
-
-**In short:** I compare averaging and a GRU using the same fixed-position arrangement, selecting each model by validation loss. Additional experiments support retaining the preprocessing and show that per-choice scoring improves model 1 on validation. Final test evaluation will assess both selected models and separately check whether the per-choice improvement generalizes.
-
-**GPU run (1.11):** `02`, `03`, `04` and the short list of `04b` have been run on a Tesla T4 on Google Colab, with patience 10. Chosen: model 1 with 600 hidden units, learning rate 0.000316, batch size 2048 (validation loss 0.6460, accuracy 64.00%); model 2 with a GRU, layer norm in the classifier, RNN hidden size 128, learning rate 0.001, dropout 0.5, batch size 128 (0.5867, 66.70%). All other results in this README are from the CPU run (commit `e5aaca6`). W&B project of the GPU run: `nlp-project1-art-gpu`. `04b` now also tests fastText and word2vec, weight decay, and margin and contrastive losses, 7 more runs per model, and its runs can continue after a stop; `03` and `04` cannot. The chosen configurations get seeds 1 to 4. `02` and `05` also have a Colab setup cell, and `04c` is removed, because every run has patience 10 here. The vocabulary of model 2 in `02` and `04b` now also holds the words of the other splits that have a GloVe vector, so `02` must be run again first. Run this branch in its own clone: `features/` and `checkpoints/` are not in git, so a run in the folder of `main` would overwrite the files of the CPU run.
+Abductive reasoning on the ART dataset: given the start and end of a short story, choose the more plausible of two explanations. This branch holds the GPU run (Tesla T4 on Google Colab).
 
 ## Models
 
-Two models are compared:
-
-1. **Model 1:** Frozen pretrained word embeddings + 2-layer classifier (ReLU). Only the classifier is trained.
-2. **Model 2:** Same frozen pretrained word embeddings + 2-layer LSTM/GRU + 2-layer classifier (ReLU). Both the RNN and classifier are trained.
-
-The pretrained embeddings are GloVe with 300 dimensions (`glove-wiki-gigaword-300`, loaded with gensim).
+1. **Model 1:** frozen GloVe vectors (`glove-wiki-gigaword-300`), averaged per text, + 2-layer ReLU classifier.
+2. **Model 2:** the same frozen vectors + 2-layer LSTM or GRU + 2-layer ReLU classifier.
 
 ## Data
 
-This project uses the HSLU course version of the ART dataset, available on [Hugging Face](https://huggingface.co/datasets/amarfurt/art-nlp-hs26).
+Course version of ART on [Hugging Face](https://huggingface.co/datasets/amarfurt/art-nlp-hs26), loaded by the notebooks: 16,801 training, 1,000 validation and 1,532 test examples. The course made these splits from [`allenai/art`](https://huggingface.co/datasets/allenai/art) (course slides "Course Project HS26", slide 8). I compared the texts: the training and validation examples occur in its train split, which is unfiltered, and the test examples in its validation split, which is adversarially filtered (Bhagavatula et al., 2020, Table 6). So validation accuracy is expected to be higher than test accuracy.
 
-The dataset contains:
+## How to run
 
-- **Training:** 16,801 examples
-- **Validation:** 1,000 examples
-- **Test:** 1,532 examples
+On Google Colab with a T4 GPU:
 
-The training set is used to train the models, the validation set for hyperparameter tuning and model selection, and the test set for final evaluation.
+1. Copy this branch to `MyDrive/nlp-project1-art` on Google Drive.
+2. Add your W&B API key as the Colab secret `WANDB_API_KEY`.
+3. Run the notebooks in this order. `features/` and `checkpoints/` are saved on Drive, not in git.
 
-The course made its own splits from the original dataset [`allenai/art`](https://huggingface.co/datasets/allenai/art) (course slides "Course Project HS26", slide 8), and they differ in difficulty. I compared the texts of the examples with `allenai/art`: all 16,801 training and all 1,000 validation examples occur in its train split, and all 1,532 test examples in its validation split. The paper says about the original dataset: "The train set includes all plausible and implausible hypotheses collected via crowdsourcing, while the dev and test sets include the hypotheses selected through the Adversarial Filtering algorithm" (Bhagavatula et al., 2020, Table 6). So the course training and validation data are unfiltered and the test data is adversarially filtered, and the validation accuracy is expected to be higher than the test accuracy.
+| Notebook | What it does |
+|---|---|
+| `01_data_exploration.ipynb` | First look at the data |
+| `02_preprocessing.ipynb` | Preprocessing decisions; saves the input of both models |
+| `03_model1_embeddings.ipynb` | Model 1: experiments, selection, seeds |
+| `04_model2_rnn.ipynb` | Model 2: experiments, selection, seeds |
+| `04b_preprocessing_experiments.ipynb` | Optional checks by training, without test data. `ALL_VARIANTS = False`: the 5 runs that `05` needs; `True`: all 48 |
+| `05_evaluation.ipynb` | The test set, once |
 
-The notebooks load the dataset directly from Hugging Face with `load_dataset("amarfurt/art-nlp-hs26", split=...)`, so no manual download is needed.
-
-## How to run it
-
-I used Python 3.12. Create a virtual environment and install the packages:
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-The training notebooks (`03`, `04` and `04b`) log every run to Weights & Biases (W&B). Log in once in the terminal with the API key of your own (free) W&B account; the key is stored locally, and the notebooks then log in with `wandb.login()` without asking:
-
-```bash
-wandb login
-```
-
-Then open the notebooks with the `.venv` kernel and run them in order:
-
-1. `01_data_exploration.ipynb` – a first look at the data
-2. `02_preprocessing.ipynb` – preprocessing decisions, choice of word embeddings and the input of both models
-3. `03_model1_embeddings.ipynb` – model 1: training, experiments, results
-4. `04_model2_rnn.ipynb` – model 2: training, experiments, results
-5. `04b_preprocessing_experiments.ipynb` – additional check, not required by the project: the preprocessing decisions, the input format and some training options tested by training, one option at a time, with the chosen settings of `03` and `04`; the test set is not loaded
-6. `05_evaluation.ipynb` – the chosen model of each architecture on the test set, the hypothesis-only runs as diagnostics, and per-choice scoring of model 1 as a separate comparison
-
-The GloVe embeddings (about 400 MB) are downloaded automatically the first time. The comparison cell in `02_preprocessing.ipynb` also downloads fastText and word2vec (about 2.7 GB); you can skip it, the results are saved in the notebook.
-
-`02_preprocessing.ipynb` saves the input features of model 1 to `features/model1.npz` (about 93 MB), which `03_model1_embeddings.ipynb` loads, and the input of model 2 (padded token indices and the GloVe embedding matrix) to `features/model2.npz` (about 40 MB), which `04_model2_rnn.ipynb` loads. The files are not in the repository because they can be recreated, so run `02_preprocessing.ipynb` before the training notebooks.
-
-Every training run saves the weights of its best epoch to `checkpoints/` (not in the repository either); `05_evaluation.ipynb` loads the checkpoints of the chosen runs, of the hypothesis-only runs and of the per-choice run, so run `03`, `04` and `04b` before it. Every run has a fixed seed: 42, or 1 to 4 in the sections "Other seeds". On the CPU, a run gives the same results when it is run again on the same machine. On a GPU, the notebooks switch on deterministic mode, and `04b` prints whether a repeated run gives the same weights. All runs were trained on my laptop CPU (Intel Core i7-1360P, no GPU): 38 in `03_model1_embeddings.ipynb`, 28 in `04_model2_rnn.ipynb` and 34 in `04b_preprocessing_experiments.ipynb`.
+Locally (Python 3.12): `python -m venv .venv`, activate it, `pip install -r requirements.txt`, `wandb login`. The chosen runs need a GPU: on a CPU, `03` uses batch size 32 and stops at its check. Every run has a fixed seed, and repeated runs on the T4 gave the same results.
 
 ## Results
 
-All choices were made on the validation set; the test set is evaluated once, in `05_evaluation.ipynb`. The primary comparison uses the fixed-position input format. For each architecture, the run and checkpoint are selected by validation loss from the grid and sweep experiments in notebooks 03 and 04. The walk-through, diagnostic and seed runs are not candidates. The variants in notebook 04b are additional experiments and do not replace these selected models. Per-choice scoring improves model 1 on validation and is also evaluated on the test set as a separate comparison.
+Each model is selected by the lowest validation loss among its candidate runs (31 for model 1, 29 for model 2; fixed-position input, seed 42). The test set is evaluated once, in `05`.
 
-| Model | Chosen configuration | Best epoch | Validation loss | Validation accuracy |
-|---|---|---|---|---|
-| Model 1: averaged GloVe vectors + 2-layer classifier | 100 hidden units, learning rate 0.000316, batch size 32 | 13 | 0.6445 | 63.20% |
-| Model 2: GloVe + 2-layer RNN + 2-layer classifier | GRU, RNN hidden size 128, learning rate 0.001, dropout 0.5 | 4 | 0.5872 | 67.60% |
+| Model | Chosen configuration | Best epoch | Validation loss | Validation accuracy | Mean of 5 seeds | Test accuracy |
+|---|---|---|---|---|---|---|
+| Model 1 | 600 hidden units, learning rate 0.000316, batch size 2048 | 40 | 0.6460 | 64.00% | 0.6463 / 63.16% | pending |
+| Model 2 | GRU, layer norm in the classifier, RNN hidden size 128, learning rate 0.001, dropout 0.5, batch size 128 | 6 | 0.5867 | 66.70% | 0.5942 / 67.28% | pending |
 
-Separate comparison, not a selected model: model 1 with per-choice scoring, with the same settings, best epoch 32, validation loss 0.5829, validation accuracy 69.10%.
+Reported only, not candidates: other seeds, the next values of model 1, the hypothesis-only runs and the variants of `04b`. Per-choice scoring of model 1 meets the decision rule of `04b` (0.5858, 68.90%, p = 0.0029) and is evaluated in `05` as a separate comparison. Details are in the conclusion of each notebook.
 
-**Test evaluation pending.**
+Expected test accuracies, written before the experiments (`EXPECTATIONS.md`): model 1 52%, model 2 53%.
 
-Experiments: model selection used 32 candidate runs for model 1 and 26 for model 2, in grids and W&B sweeps. Notebook `04b` reports 34 additional preprocessing and input-format runs (17 per model): no preprocessing variant meets the decision rule stated there, so the preprocessing of `02` stays; one input format variant does (`per-choice` for model 1). The chosen configurations are also trained with seeds 1 and 2, and these runs are only reported. The sweep winner of model 1 is not shown to be better than the best run of the first grid (exact McNemar test, p = 0.8546). Detailed configurations and results are in the notebooks, sections "Results" and "Conclusion", and in W&B. The expected test accuracies, written down before the experiments, are in `EXPECTATIONS.md` (model 1: 52%, model 2: 53%).
+W&B: [saved view of the candidate runs](https://forge.coreweave.com/wandb/maria-micioni-hochschule-luzern/nlp-project1-art-gpu/workspace?nw=8wrb7u99ny1).
 
 ## References
+
+Library documentation, tutorials and blog posts (accessed October and November 2026) are cited with their links in the Sources cell of each notebook.
 
 ### Course materials
 
@@ -136,86 +106,7 @@ Exercise notebooks:
 - Hunter, J. D. (2007). Matplotlib: A 2D Graphics Environment. *Computing in Science & Engineering, 9*(3), 90–95.
 - Biewald, L. (2020). *Experiment Tracking with Weights and Biases*. Software available from https://wandb.ai/
 - Virtanen, P., Gommers, R., Oliphant, T. E., et al. (2020). SciPy 1.0: Fundamental Algorithms for Scientific Computing in Python. *Nature Methods, 17*, 261–272. https://doi.org/10.1038/s41592-019-0686-2
-
-### Documentation and tutorials (accessed October 2026)
-
-- NumPy documentation: `numpy.savez`, https://numpy.org/doc/stable/reference/generated/numpy.savez.html, and `numpy.ndarray.astype`, https://numpy.org/doc/stable/reference/generated/numpy.ndarray.astype.html
-- Python documentation: `os` module, https://docs.python.org/3/library/os.html
-- NumPy documentation: `numpy.percentile`, https://numpy.org/doc/stable/reference/generated/numpy.percentile.html
-- Python documentation: "Common Sequence Operations" (slicing, `*` and `+` on lists), https://docs.python.org/3/library/stdtypes.html#common-sequence-operations
-- Python tutorial: "Dictionaries", https://docs.python.org/3/tutorial/datastructures.html#dictionaries
-- Python tutorial: "List Comprehensions" (with an `if` condition), https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions
-- NumPy documentation: `numpy.zeros` (`shape`, `dtype`), https://numpy.org/doc/stable/reference/generated/numpy.zeros.html
-- Python tutorial: "Looping Techniques" (`dict.items()`), https://docs.python.org/3/tutorial/datastructures.html#looping-techniques
-- PyTorch documentation: `torch.nn.Embedding` (`from_pretrained`, `freeze`, `padding_idx`), https://docs.pytorch.org/docs/stable/generated/torch.nn.Embedding.html
-- PyTorch documentation: `torch.nn.GRU` (also the variable `weight_ih_l[k]`), https://docs.pytorch.org/docs/stable/generated/torch.nn.GRU.html
-- PyTorch tutorial: "Datasets & DataLoaders" (`next(iter(...))`), https://docs.pytorch.org/tutorials/beginner/basics/data_tutorial.html
-- Python documentation: built-in function `isinstance`, https://docs.python.org/3/library/functions.html#isinstance
-- PyTorch documentation: `torch.nn.LSTM` (`h_n`, the final hidden state), https://docs.pytorch.org/docs/stable/generated/torch.nn.LSTM.html
-- PyTorch documentation: `torch.nn.utils.rnn.pack_padded_sequence`, https://docs.pytorch.org/docs/stable/generated/torch.nn.utils.rnn.pack_padded_sequence.html
-- NumPy documentation: `numpy.sum` (`axis`), https://numpy.org/doc/stable/reference/generated/numpy.sum.html
-- PyTorch documentation: `torch.sum` (`dim`), https://docs.pytorch.org/docs/stable/generated/torch.sum.html
-- PyTorch tutorial "Neural Networks": https://docs.pytorch.org/tutorials/beginner/blitz/neural_networks_tutorial.html
-- PyTorch tutorial "Optimizing Model Parameters": https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html
-- PyTorch documentation: `torch.nn.CrossEntropyLoss`, https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html
-- PyTorch documentation: "Reproducibility" (`torch.manual_seed`), https://docs.pytorch.org/docs/stable/notes/randomness.html
-- PyTorch documentation: `torch.utils.data` (`DataLoader`, `TensorDataset`), https://docs.pytorch.org/docs/stable/data.html
-- PyTorch documentation: `torch.mean`, https://docs.pytorch.org/docs/stable/generated/torch.mean.html
-- scikit-learn glossary (naming convention `X` and `y`): https://scikit-learn.org/stable/glossary.html
-- Weights & Biases quickstart (`wandb.init` with `project` and `config`): https://docs.wandb.ai/models/quickstart
-- Weights & Biases documentation: `wandb.init()` reference (`project`, `name`, `config`), https://docs.wandb.ai/models/ref/python/functions/init
-- Weights & Biases documentation: "Log objects and media" (`run.log`, `epoch` as custom x-axis), https://docs.wandb.ai/models/track/log
-- PyTorch tutorial "Save and Load the Model": https://docs.pytorch.org/tutorials/beginner/basics/saveloadrun_tutorial.html
-- Python documentation: built-in function `float` (`float("inf")`), https://docs.python.org/3/library/functions.html#float
-- Python documentation: built-in functions `all()`, `any()`, `ord()`, `zip()`, `enumerate()` and `round()`, https://docs.python.org/3/library/functions.html
-- Python documentation: conditional expressions, https://docs.python.org/3/reference/expressions.html#conditional-expressions
-- Python documentation: `string.punctuation`, https://docs.python.org/3/library/string.html#string.punctuation
-- Python documentation: `re` (regular expressions, `re.search`), https://docs.python.org/3/library/re.html
-- NLTK documentation: "Installing NLTK Data" (`nltk.download`), https://www.nltk.org/data.html, and `nltk.probability.FreqDist`, https://www.nltk.org/api/nltk.probability.FreqDist.html
-- Weights & Biases documentation: "Log summary metrics" (`run.summary`), https://docs.wandb.ai/models/track/log/log-summary
-- Python documentation: "Sorting Techniques" (`sorted()`), https://docs.python.org/3/howto/sorting.html
-- Karpathy, A. (2019, April 25). *A Recipe for Training Neural Networks* [Blog post] ("overfit one batch"). https://karpathy.github.io/2019/04/25/recipe/
-- PyTorch documentation: `torch.equal`, https://docs.pytorch.org/docs/stable/generated/torch.equal.html
-- PyTorch documentation: `torch.nn.Dropout`, https://docs.pytorch.org/docs/stable/generated/torch.nn.Dropout.html
-- PyTorch documentation: `torch.nn.LayerNorm`, https://docs.pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html
-- PyTorch documentation: `torch.numel`, https://docs.pytorch.org/docs/stable/generated/torch.numel.html
-- PyTorch documentation: `torch.nn.Sequential`, https://docs.pytorch.org/docs/stable/generated/torch.nn.Sequential.html
-- Python documentation: tutorial "Classes" (inheritance), https://docs.python.org/3/tutorial/classes.html#inheritance
-- PyTorch documentation: `torch.optim.AdamW` (algorithm, `weight_decay`), https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html
-- PyTorch documentation: `torch.nn.MultiMarginLoss`, https://docs.pytorch.org/docs/stable/generated/torch.nn.MultiMarginLoss.html
-- PyTorch documentation: `torch.nn.CosineEmbeddingLoss`, https://docs.pytorch.org/docs/stable/generated/torch.nn.CosineEmbeddingLoss.html
-- PyTorch documentation: `torch.cosine_similarity`, https://docs.pytorch.org/docs/stable/generated/torch.cosine_similarity.html; `torch.stack`, https://docs.pytorch.org/docs/stable/generated/torch.stack.html; `torch.arange`, https://docs.pytorch.org/docs/stable/generated/torch.arange.html; `torch.cat`, https://docs.pytorch.org/docs/stable/generated/torch.cat.html; `torch.flatten`, https://docs.pytorch.org/docs/stable/generated/torch.flatten.html; `Tensor.norm`, https://docs.pytorch.org/docs/stable/generated/torch.Tensor.norm.html; `torch.isclose`, https://docs.pytorch.org/docs/stable/generated/torch.isclose.html
-- PyTorch tutorial "Saving and Loading Models" (a checkpoint for resuming training): https://docs.pytorch.org/tutorials/beginner/saving_loading_models.html
-- PyTorch documentation: `torch.load` (`map_location`), https://docs.pytorch.org/docs/stable/generated/torch.load.html; `torch.get_rng_state`, https://docs.pytorch.org/docs/stable/generated/torch.get_rng_state.html; `torch.set_rng_state`, https://docs.pytorch.org/docs/stable/generated/torch.set_rng_state.html; `torch.cuda.get_rng_state_all`, https://docs.pytorch.org/docs/stable/generated/torch.cuda.get_rng_state_all.html; `torch.cuda.set_rng_state_all`, https://docs.pytorch.org/docs/stable/generated/torch.cuda.set_rng_state_all.html
-- Python documentation: `os.path.exists`, https://docs.python.org/3/library/os.path.html#os.path.exists; `os.replace` and `os.remove`, https://docs.python.org/3/library/os.html; `str.startswith`, `str.split`, `str.replace` and `dict.get`, https://docs.python.org/3/library/stdtypes.html; `hasattr` and `all`, https://docs.python.org/3/library/functions.html
-- Weights & Biases documentation (now at docs.coreweave.com): `wandb.init()` (`mode="disabled"`), https://docs.coreweave.com/models/ref/python/functions/init
-- PyTorch documentation: `torch.backends.cudnn.deterministic`, https://docs.pytorch.org/docs/stable/backends.html; `torch.use_deterministic_algorithms` (`warn_only`), https://docs.pytorch.org/docs/stable/generated/torch.use_deterministic_algorithms.html; `CUBLAS_WORKSPACE_CONFIG`, from the warning about RNN functions in `torch.nn.LSTM`, https://docs.pytorch.org/docs/stable/generated/torch.nn.LSTM.html
-- Python documentation: `sys.modules`, https://docs.python.org/3/library/sys.html#sys.modules; `os.chdir`, https://docs.python.org/3/library/os.html#os.chdir
-- IPython documentation: `%pip`, https://ipython.readthedocs.io/en/stable/interactive/magics.html
-- Python documentation: `time` module (`time.time()`), https://docs.python.org/3/library/time.html
-- Python documentation: set types (`^` and `<=`), https://docs.python.org/3/builtins/stdtypes.html#set-types-set-frozenset
-- Python documentation: `str.split`, `str.lower` and `list.extend`, https://docs.python.org/3/library/stdtypes.html
-- NumPy documentation: `ndarray.min`, https://numpy.org/doc/stable/reference/generated/numpy.ndarray.min.html, `ndarray.max`, https://numpy.org/doc/stable/reference/generated/numpy.ndarray.max.html, and `ndarray.std`, https://numpy.org/doc/stable/reference/generated/numpy.ndarray.std.html
-- pandas documentation: `pandas.set_option`, https://pandas.pydata.org/docs/reference/api/pandas.set_option.html
-- Matplotlib documentation: `pyplot.subplots`, https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html, and `Axes.hist`, https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.hist.html
-- Python tutorial: "Comparing Sequences and Other Types" (`==` on lists), https://docs.python.org/3/tutorial/datastructures.html#comparing-sequences-and-other-types
-- Python documentation: the `assert` statement, https://docs.python.org/3/reference/simple_stmts.html#the-assert-statement
-- PyTorch documentation: `torch.bitwise_and`, https://docs.pytorch.org/docs/stable/generated/torch.bitwise_and.html, and `torch.bitwise_not`, https://docs.pytorch.org/docs/stable/generated/torch.bitwise_not.html
-- PyTorch documentation: `torch.nonzero`, https://docs.pytorch.org/docs/stable/generated/torch.nonzero.html
-- SciPy documentation: `scipy.stats.binomtest`, https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html
-- Wikipedia: "McNemar's test" (exact binomial test), https://en.wikipedia.org/wiki/McNemar%27s_test
-- Wikipedia: "Holm–Bonferroni method", https://en.wikipedia.org/wiki/Holm%E2%80%93Bonferroni_method
-- Weights & Biases documentation (now at docs.coreweave.com): sweep configuration, https://docs.coreweave.com/models/sweeps/define-sweep-configuration; its options, https://docs.coreweave.com/models/sweeps/sweep-config-keys; sweeps walkthrough, https://docs.coreweave.com/models/sweeps/walkthrough; run config, https://docs.coreweave.com/models/track/config; `Run`, https://docs.coreweave.com/models/ref/python/experiments/run
-- NLTK documentation: `nltk.tag` (`pos_tag`), https://www.nltk.org/api/nltk.tag.html; `PerceptronTagger`, https://www.nltk.org/api/nltk.tag.perceptron.html; `WordNetLemmatizer.lemmatize`, https://www.nltk.org/api/nltk.stem.wordnet.html; `upenn_tagset`, https://www.nltk.org/api/nltk.help.html
-- PyTorch documentation: `torch.clamp`, https://docs.pytorch.org/docs/stable/generated/torch.clamp.html
-- NumPy documentation: `numpy.transpose`, https://numpy.org/doc/stable/reference/generated/numpy.transpose.html, and `numpy.array_equal`, https://numpy.org/doc/stable/reference/generated/numpy.array_equal.html
-- Python documentation: `dict.get`, https://docs.python.org/3/library/stdtypes.html#dict.get
-- scikit-learn documentation: "Permutation feature importance", https://scikit-learn.org/stable/modules/permutation_importance.html
-- Weights & Biases documentation (now at docs.coreweave.com): "Environment variables" (`WANDB_SILENT`), https://docs.coreweave.com/models/track/environment-variables
-- Python documentation: `os.environ`, https://docs.python.org/3/library/os.html#os.environ
-- PyTorch documentation: `torch.flip`, https://docs.pytorch.org/docs/stable/generated/torch.flip.html, `torch.randn`, https://docs.pytorch.org/docs/stable/generated/torch.randn.html, and `torch.max`, https://docs.pytorch.org/docs/stable/generated/torch.max.html
-- NumPy documentation: `numpy.random.default_rng` and `Generator.normal`, https://numpy.org/doc/stable/reference/random/generator.html, and "Indexing on ndarrays", https://numpy.org/doc/stable/user/basics.indexing.html
-- PyTorch documentation: `torch.randperm`, https://docs.pytorch.org/docs/stable/generated/torch.randperm.html, and `Tensor.clone`, https://docs.pytorch.org/docs/stable/generated/torch.Tensor.clone.html
+- Weights & Biases quickstart (`wandb.init` with `project` and `config`), accessed October 2026. https://docs.wandb.ai/models/quickstart
 
 ## Use of AI
 
