@@ -4,7 +4,7 @@ This project focuses on abductive commonsense reasoning using the ART dataset. G
 
 **In short:** I compare averaging and a GRU using the same fixed-position arrangement, selecting each model by validation loss. Additional experiments support retaining the preprocessing and show that per-choice scoring improves model 1 on validation. Final test evaluation will assess both selected models and separately check whether the per-choice improvement generalizes.
 
-**GPU run (1.11):** the code of `03`, `04` and `04b` now uses a GPU if there is one, patience 10 for every run, and the largest batch size that fits the GPU, up to 2048. The results in this README and in the notebooks are still those of the CPU run (commit `e5aaca6`) until these notebooks are run again. W&B project of the GPU run: `nlp-project1-art-gpu`.
+**GPU run (1.11):** the code of `03`, `04` and `04b` now uses a GPU if there is one, patience 10 for every run, and the largest batch size that fits the GPU, up to 2048. The results in this README and in the notebooks are still those of the CPU run (commit `e5aaca6`) until these notebooks are run again. W&B project of the GPU run: `nlp-project1-art-gpu`. The vocabulary of model 2 in `02` and `04b` now also holds the words of the other splits that have a GloVe vector, so `02` must be run again first. Run this branch in its own clone: `features/` and `checkpoints/` are not in git, so a run in the folder of `main` would overwrite the files of the CPU run.
 
 ## Models
 
