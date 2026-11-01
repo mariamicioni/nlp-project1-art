@@ -25,7 +25,6 @@ On Google Colab with a T4 GPU:
 | `02_preprocessing.ipynb` | Preprocessing decisions; saves the input of both models |
 | `03_model1_embeddings.ipynb` | Model 1: experiments, selection, seeds |
 | `04_model2_rnn.ipynb` | Model 2: experiments, selection, seeds |
-| `04b_preprocessing_experiments.ipynb` | Optional checks by training, without test data. `ALL_VARIANTS = False`: the 5 runs that `05` needs; `True`: all 48 |
 | `05_evaluation.ipynb` | The test set, once |
 
 Locally (Python 3.12): `python -m venv .venv`, activate it, `pip install -r requirements.txt`, `wandb login`. The chosen runs need a GPU: on a CPU, `03` uses batch size 32 and stops at its check. Every run has a fixed seed, and repeated runs on the T4 gave the same results.
@@ -39,7 +38,7 @@ Each model is selected by the lowest validation loss among its candidate runs (3
 | Model 1 | 600 hidden units, learning rate 0.000316, batch size 2048 | 40 | 0.6460 | 64.00% | 0.6463 / 63.16% | pending |
 | Model 2 | GRU, layer norm in the classifier, RNN hidden size 128, learning rate 0.001, dropout 0.5, batch size 128 | 6 | 0.5867 | 66.70% | 0.5942 / 67.28% | pending |
 
-Reported only, not candidates: other seeds, the next values of model 1, weight decay on model 2, the hypothesis-only runs and the variants of `04b`. Per-choice scoring of model 1 meets the decision rule of `04b` (0.5858, 68.90%, p = 0.0029) and is evaluated in `05` as a separate comparison. Details are in the conclusion of each notebook.
+Reported only, not candidates: other seeds, the next values of model 1, weight decay on model 2 and the hypothesis-only run of model 1. A check run of model 1 with per-choice scoring reached 0.5858 and 68.90% on validation, so the gap between the models may depend on the input format; it is not evaluated on the test set, and its code is [`04b_preprocessing_experiments.ipynb` at commit `9106efb`](https://github.com/mariamicioni/nlp-project1-art/blob/9106efb/04b_preprocessing_experiments.ipynb). Details are in the conclusion of each notebook.
 
 Expected test accuracies, written before the experiments (`EXPECTATIONS.md`): model 1 52%, model 2 53%.
 
@@ -90,7 +89,6 @@ Exercise notebooks:
 - Gururangan, S., Swayamdipta, S., Levy, O., Schwartz, R., Bowman, S. R., & Smith, N. A. (2018). Annotation Artifacts in Natural Language Inference Data. *Proceedings of NAACL-HLT 2018*. https://arxiv.org/abs/1803.02324
 - Poliak, A., Naradowsky, J., Haldar, A., Rudinger, R., & Van Durme, B. (2018). Hypothesis Only Baselines in Natural Language Inference. *Proceedings of the Seventh Joint Conference on Lexical and Computational Semantics (\*SEM 2018)*, 180–191. https://arxiv.org/abs/1805.01042
 - Loshchilov, I., & Hutter, F. (2019). Decoupled Weight Decay Regularization. *International Conference on Learning Representations (ICLR 2019)*. https://arxiv.org/abs/1711.05101
-- Holm, S. (1979). A simple sequentially rejective multiple test procedure. *Scandinavian Journal of Statistics, 6*(2), 65–70.
 - McNemar, Q. (1947). Note on the sampling error of the difference between correlated proportions or percentages. *Psychometrika, 12*(2), 153–157. https://doi.org/10.1007/BF02295996
 - Breiman, L. (2001). Random Forests. *Machine Learning, 45*(1), 5–32. https://doi.org/10.1023/A:1010933404324
 - Hägele, A., Bakouch, E., Kosson, A., Ben Allal, L., Von Werra, L., & Jaggi, M. (2024). Scaling Laws and Compute-Optimal Training Beyond Fixed Training Durations. *arXiv preprint arXiv:2405.18392*. https://arxiv.org/abs/2405.18392 (cited on slide 33 of the course slides "Project Discussions")
