@@ -25,7 +25,7 @@ On Google Colab with a T4 GPU:
 | `02_preprocessing.ipynb` | Preprocessing decisions; saves the input of both models |
 | `03_model1_embeddings.ipynb` | Model 1: experiments, selection, seeds |
 | `04_model2_rnn.ipynb` | Model 2: experiments, selection, seeds |
-| `04b_preprocessing_experiments.ipynb` | Optional checks by training, without test data. `ALL_VARIANTS = False`: the 14 runs with what `05` needs and the options against overfitting; `True`: all 51 |
+| `04b_preprocessing_experiments.ipynb` | Optional checks by training, without test data. `ALL_VARIANTS = False`: the 5 runs that `05` needs; `True`: all 48 |
 | `05_evaluation.ipynb` | The test set, once |
 
 Locally (Python 3.12): `python -m venv .venv`, activate it, `pip install -r requirements.txt`, `wandb login`. The chosen runs need a GPU: on a CPU, `03` uses batch size 32 and stops at its check. Every run has a fixed seed, and repeated runs on the T4 gave the same results.
