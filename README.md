@@ -4,7 +4,7 @@ This project focuses on abductive commonsense reasoning using the ART dataset. G
 
 **In short:** I compare averaging and a GRU using the same fixed-position arrangement, selecting each model by validation loss. Additional experiments support retaining the preprocessing and show that per-choice scoring improves model 1 on validation. Final test evaluation will assess both selected models and separately check whether the per-choice improvement generalizes.
 
-**GPU run (1.11):** the code of `03`, `04` and `04b` now uses a GPU if there is one, patience 10 for every run, and the largest batch size that fits the GPU, up to 2048. The results in this README and in the notebooks are still those of the CPU run (commit `e5aaca6`) until these notebooks are run again. W&B project of the GPU run: `nlp-project1-art-gpu`. The vocabulary of model 2 in `02` and `04b` now also holds the words of the other splits that have a GloVe vector, so `02` must be run again first. Run this branch in its own clone: `features/` and `checkpoints/` are not in git, so a run in the folder of `main` would overwrite the files of the CPU run.
+**GPU run (1.11):** the code of `03`, `04` and `04b` now uses a GPU if there is one, patience 10 for every run, and the largest batch size that fits the GPU, up to 2048. The results in this README and in the notebooks are still those of the CPU run (commit `e5aaca6`) until these notebooks are run again. W&B project of the GPU run: `nlp-project1-art-gpu`. `04b` now also tests weight decay and margin and contrastive losses, 5 more runs per model, and its runs can continue after a stop; `03` and `04` cannot. The vocabulary of model 2 in `02` and `04b` now also holds the words of the other splits that have a GloVe vector, so `02` must be run again first. Run this branch in its own clone: `features/` and `checkpoints/` are not in git, so a run in the folder of `main` would overwrite the files of the CPU run.
 
 ## Models
 
@@ -53,7 +53,7 @@ Then open the notebooks with the `.venv` kernel and run them in order:
 2. `02_preprocessing.ipynb` – preprocessing decisions, choice of word embeddings and the input of both models
 3. `03_model1_embeddings.ipynb` – model 1: training, experiments, results
 4. `04_model2_rnn.ipynb` – model 2: training, experiments, results
-5. `04b_preprocessing_experiments.ipynb` – additional check, not required by the project: the preprocessing decisions and the input format tested by training, one option at a time, with the chosen settings of `03` and `04`; the test set is not loaded
+5. `04b_preprocessing_experiments.ipynb` – additional check, not required by the project: the preprocessing decisions, the input format and some training options tested by training, one option at a time, with the chosen settings of `03` and `04`; the test set is not loaded
 6. `04c_patience_check.ipynb` – additional check, not required by the project: the chosen model 2 with patience 10 instead of 3; no other notebook depends on it
 7. `05_evaluation.ipynb` – the chosen model of each architecture on the test set, the hypothesis-only runs as diagnostics, and per-choice scoring of model 1 as a separate comparison
 
@@ -182,7 +182,14 @@ Exercise notebooks:
 - PyTorch documentation: `torch.numel`, https://docs.pytorch.org/docs/stable/generated/torch.numel.html
 - PyTorch documentation: `torch.nn.Sequential`, https://docs.pytorch.org/docs/stable/generated/torch.nn.Sequential.html
 - Python documentation: tutorial "Classes" (inheritance), https://docs.python.org/3/tutorial/classes.html#inheritance
-- PyTorch documentation: `torch.optim.AdamW` (algorithm), https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html
+- PyTorch documentation: `torch.optim.AdamW` (algorithm, `weight_decay`), https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html
+- PyTorch documentation: `torch.nn.MultiMarginLoss`, https://docs.pytorch.org/docs/stable/generated/torch.nn.MultiMarginLoss.html
+- PyTorch documentation: `torch.nn.CosineEmbeddingLoss`, https://docs.pytorch.org/docs/stable/generated/torch.nn.CosineEmbeddingLoss.html
+- PyTorch documentation: `torch.cosine_similarity`, https://docs.pytorch.org/docs/stable/generated/torch.cosine_similarity.html; `torch.stack`, https://docs.pytorch.org/docs/stable/generated/torch.stack.html; `torch.arange`, https://docs.pytorch.org/docs/stable/generated/torch.arange.html; `torch.cat`, https://docs.pytorch.org/docs/stable/generated/torch.cat.html; `torch.flatten`, https://docs.pytorch.org/docs/stable/generated/torch.flatten.html; `Tensor.norm`, https://docs.pytorch.org/docs/stable/generated/torch.Tensor.norm.html; `torch.isclose`, https://docs.pytorch.org/docs/stable/generated/torch.isclose.html
+- PyTorch tutorial "Saving and Loading Models" (a checkpoint for resuming training): https://docs.pytorch.org/tutorials/beginner/saving_loading_models.html
+- PyTorch documentation: `torch.load` (`map_location`), https://docs.pytorch.org/docs/stable/generated/torch.load.html; `torch.get_rng_state`, https://docs.pytorch.org/docs/stable/generated/torch.get_rng_state.html; `torch.set_rng_state`, https://docs.pytorch.org/docs/stable/generated/torch.set_rng_state.html; `torch.cuda.get_rng_state_all`, https://docs.pytorch.org/docs/stable/generated/torch.cuda.get_rng_state_all.html; `torch.cuda.set_rng_state_all`, https://docs.pytorch.org/docs/stable/generated/torch.cuda.set_rng_state_all.html
+- Python documentation: `os.path.exists`, https://docs.python.org/3/library/os.path.html#os.path.exists; `os.replace` and `os.remove`, https://docs.python.org/3/library/os.html; `str.startswith`, `str.split`, `str.replace` and `dict.get`, https://docs.python.org/3/library/stdtypes.html; `hasattr` and `all`, https://docs.python.org/3/library/functions.html
+- Weights & Biases documentation (now at docs.coreweave.com): `wandb.init()` (`mode="disabled"`), https://docs.coreweave.com/models/ref/python/functions/init
 - Python documentation: `time` module (`time.time()`), https://docs.python.org/3/library/time.html
 - Python documentation: set types (`^` and `<=`), https://docs.python.org/3/builtins/stdtypes.html#set-types-set-frozenset
 - Python documentation: `str.split`, `str.lower` and `list.extend`, https://docs.python.org/3/library/stdtypes.html
