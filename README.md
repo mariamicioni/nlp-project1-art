@@ -25,6 +25,7 @@ On Google Colab with a T4 GPU:
 | `02_preprocessing.ipynb` | Preprocessing decisions; saves the input of both models |
 | `03_model1_embeddings.ipynb` | Model 1: experiments, selection, seeds |
 | `04_model2_rnn.ipynb` | Model 2: experiments, selection, seeds |
+| `04b_per_choice.ipynb` | Optional check: per-choice scoring of model 1, without test data |
 | `05_evaluation.ipynb` | The test set, once |
 
 Locally (Python 3.12): `python -m venv .venv`, activate it, `pip install -r requirements.txt`, `wandb login`. The chosen runs need a GPU: on a CPU, `03` uses batch size 32 and stops at its check. Every run has a fixed seed, and repeated runs on the T4 gave the same results.
@@ -38,7 +39,7 @@ Each model is selected by the lowest validation loss among its candidate runs (3
 | Model 1 | 600 hidden units, learning rate 0.000316, batch size 2048 | 40 | 0.6460 | 64.00% | 0.6463 / 63.16% | pending |
 | Model 2 | GRU, layer norm in the classifier, RNN hidden size 128, learning rate 0.001, dropout 0.5, batch size 128 | 6 | 0.5867 | 66.70% | 0.5942 / 67.28% | pending |
 
-Reported only, not candidates: other seeds, the next values of model 1, weight decay on model 2 and the hypothesis-only run of model 1. Details are in the conclusion of each notebook.
+Reported only, not candidates: other seeds, the next values of model 1, weight decay on model 2 and the hypothesis-only run of model 1. Per-choice scoring of model 1 (`04b_per_choice.ipynb`) reaches 0.5858 and 68.90% on validation (p = 0.0029 against the chosen model 1), at least level with the chosen model 2, so the gap between the models may depend on the input format; it is evaluated in `05` as a separate comparison. Details are in the conclusion of each notebook.
 
 Expected test accuracies, written before the experiments (`EXPECTATIONS.md`): model 1 52%, model 2 53%.
 
