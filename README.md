@@ -28,7 +28,7 @@ On Google Colab with a T4 GPU:
 | `04b_per_choice.ipynb` | Optional check: per-choice scoring of model 1, without test data |
 | `05_evaluation.ipynb` | The test set, once |
 
-Locally (Python 3.12): `python -m venv .venv`, activate it, `pip install -r requirements.txt`, `wandb login`. The chosen runs need a GPU: on a CPU, `03` uses batch size 32 and stops at its check. Every run has a fixed seed, and repeated runs on the T4 gave the same results.
+Locally (Python 3.12): `python -m venv .venv`, activate it, `pip install -r requirements.txt`, `wandb login`. The chosen runs need a GPU: on a CPU, `03` uses batch size 32, so its check that `glove-mlp-sweep-h600-lr0.000316-b2048` is the lowest run stops it. Every run has a fixed seed, and repeated runs on the T4 gave the same results.
 
 ## Results
 
