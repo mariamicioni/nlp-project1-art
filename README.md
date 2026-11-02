@@ -1,6 +1,6 @@
 # NLP HS26 – Project 1: Word Embeddings and RNNs
 
-Abductive reasoning on the ART dataset: given the start and end of a short story, choose the more plausible of two explanations. This branch holds the GPU run (Tesla T4 on Google Colab).
+Abductive reasoning on the ART dataset: given the start and end of a short story, choose the more plausible of two explanations.
 
 ## Models
 
@@ -34,14 +34,16 @@ Locally (Python 3.12): `python -m venv .venv`, activate it, `pip install -r requ
 
 Each model is selected by the lowest validation loss among its candidate runs (31 for model 1, 29 for model 2; fixed-position input, seed 42). The test set is evaluated once, in `05`.
 
-| Model | Chosen configuration | Best epoch | Validation loss | Validation accuracy | Mean of 5 seeds | Test accuracy |
+| Model | Chosen configuration | Best epoch | Validation loss | Validation accuracy | Validation, mean of 5 seeds | Test accuracy |
 |---|---|---|---|---|---|---|
-| Model 1 | 600 hidden units, learning rate 0.000316, batch size 2048 | 40 | 0.6460 | 64.00% | 0.6463 / 63.16% | pending |
-| Model 2 | GRU, layer norm in the classifier, RNN hidden size 128, learning rate 0.001, dropout 0.5, batch size 128 | 6 | 0.5867 | 66.70% | 0.5942 / 67.28% | pending |
+| Model 1 | 600 hidden units, learning rate 0.000316, batch size 2048 | 40 | 0.6460 | 64.00% | 0.6463 / 63.16% | 50.39% |
+| Model 2 | GRU, layer norm in the classifier, RNN hidden size 128, learning rate 0.001, dropout 0.5, batch size 128 | 6 | 0.5867 | 66.70% | 0.5942 / 67.28% | 54.96% |
 
-Reported only, not candidates: other seeds, the next values of model 1, dropout and weight decay on the chosen model 1, weight decay on the chosen model 2, and the hypothesis-only run of model 1. Per-choice scoring of model 1 (`04b_per_choice.ipynb`) reaches 0.5858 and 68.90% on validation (p = 0.0029 against the chosen model 1). In this run, per-choice model 1 has slightly lower validation loss and higher accuracy than the selected model 2; this comparison was not statistically tested. So the gap between the models may depend on the input format. It is evaluated in `05` as a separate comparison. Details are in the conclusion of each notebook.
+On the test set, model 2 gets more examples right than model 1 (only model 2 right 245, only model 1 right 175, exact McNemar p = 0.0007), and all its seeds are above all seeds of model 1. Its test loss is slightly higher (0.8572 vs. 0.8465), so the lead is in accuracy, not in loss. Over 5 seeds, test accuracy is 50.29% (sd 0.26%) for model 1 and 53.09% (sd 1.16%) for model 2; seed 42 is the highest of the five for model 2. Always choosing h1 reaches 50.98%. This applies to the fixed-position format. All runs fall from validation to test, as expected from the unfiltered validation set and the adversarially filtered test set.
 
-Expected test accuracies, written before the experiments (`EXPECTATIONS.md`): model 1 52%, model 2 53%.
+Reported only, not candidates: other seeds, the next values of model 1, dropout and weight decay on the chosen model 1, weight decay on the chosen model 2, and the hypothesis-only run of model 1. Per-choice scoring of model 1 (`04b_per_choice.ipynb`) reaches 0.5858 and 68.90% on validation (p = 0.0029 against the chosen model 1). In this run, per-choice model 1 has slightly lower validation loss and higher accuracy than the selected model 2; this comparison was not statistically tested. So the gap between the models may depend on the input format. On the test set, this gain does not carry over: per-choice model 1 reaches 51.70% (p = 0.3348 against the chosen model 1), and a per-choice model 2 was not run. The hypothesis-only run of model 1 falls from 65.00% on validation to 50.91% on test. Details are in the conclusion of each notebook.
+
+Expected test accuracies, written before the experiments (`EXPECTATIONS.md`): model 1 52%, model 2 53%. Model 1 is below its expectation; model 2 reaches it over 5 seeds.
 
 W&B: [saved view of the candidate runs and the reported dropout, weight decay and per-choice runs](https://forge.coreweave.com/wandb/maria-micioni-hochschule-luzern/nlp-project1-art-gpu/workspace?nw=8wrb7u99ny1).
 
