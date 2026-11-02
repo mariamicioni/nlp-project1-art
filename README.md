@@ -43,7 +43,7 @@ Reported only, not candidates: other seeds, the next values of model 1, dropout 
 
 Expected test accuracies, written before the experiments (`EXPECTATIONS.md`): model 1 52%, model 2 53%.
 
-W&B: [saved view of the candidate runs, the weight decay runs and the per-choice run](https://forge.coreweave.com/wandb/maria-micioni-hochschule-luzern/nlp-project1-art-gpu/workspace?nw=8wrb7u99ny1).
+W&B: [saved view of the candidate runs and the reported dropout, weight decay and per-choice runs](https://forge.coreweave.com/wandb/maria-micioni-hochschule-luzern/nlp-project1-art-gpu/workspace?nw=8wrb7u99ny1).
 
 ## References
 
