@@ -39,7 +39,7 @@ Each model is selected by the lowest validation loss among its candidate runs (3
 | Model 1 | 600 hidden units, learning rate 0.000316, batch size 2048 | 40 | 0.6460 | 64.00% | 0.6463 / 63.16% | pending |
 | Model 2 | GRU, layer norm in the classifier, RNN hidden size 128, learning rate 0.001, dropout 0.5, batch size 128 | 6 | 0.5867 | 66.70% | 0.5942 / 67.28% | pending |
 
-Reported only, not candidates: other seeds, the next values of model 1, weight decay on model 2 and the hypothesis-only run of model 1. Per-choice scoring of model 1 (`04b_per_choice.ipynb`) reaches 0.5858 and 68.90% on validation (p = 0.0029 against the chosen model 1), at least level with the chosen model 2, so the gap between the models may depend on the input format; it is evaluated in `05` as a separate comparison. Details are in the conclusion of each notebook.
+Reported only, not candidates: other seeds, the next values of model 1, weight decay on model 2 and the hypothesis-only run of model 1. Per-choice scoring of model 1 (`04b_per_choice.ipynb`) reaches 0.5858 and 68.90% on validation (p = 0.0029 against the chosen model 1). In this run, per-choice model 1 has slightly lower validation loss and higher accuracy than the selected model 2; this comparison was not statistically tested. So the gap between the models may depend on the input format. It is evaluated in `05` as a separate comparison. Details are in the conclusion of each notebook.
 
 Expected test accuracies, written before the experiments (`EXPECTATIONS.md`): model 1 52%, model 2 53%.
 
