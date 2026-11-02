@@ -45,6 +45,8 @@ Reported only, not candidates: other seeds, the next values of model 1, dropout 
 
 Expected test accuracies, written before the experiments (`EXPECTATIONS.md`): model 1 52%, model 2 53%. Model 1 is below its expectation; model 2 reaches it over 5 seeds.
 
+The notebooks mention an earlier CPU run of this project. It is kept in the git history, at commit [`3de26a1`](https://github.com/mariamicioni/nlp-project1-art/tree/3de26a1).
+
 W&B: [saved view of the candidate runs and the reported dropout, weight decay and per-choice runs](https://forge.coreweave.com/wandb/maria-micioni-hochschule-luzern/nlp-project1-art-gpu/workspace?nw=8wrb7u99ny1).
 
 ## References
